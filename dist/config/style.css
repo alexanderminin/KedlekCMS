@@ -1,0 +1,18 @@
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.footer {
+  padding-top: 19px;
+  color: #777;
+  border-top: 1px solid #e5e5e5;
+}
+
+.jumbotron {
+  text-align: center;
+}
+
+.share {
+  margin-bottom: 10px;
+}

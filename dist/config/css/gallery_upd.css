@@ -1,0 +1,22 @@
+.thumb-img{
+    width: 100%;
+}
+
+.thumb-div{
+    width: 100%;
+}
+
+.sortable-ghost {
+    opacity: .2;
+}
+
+.img_list div { cursor: move; }
+
+.img_list_items div {
+    background-color: #fff;
+}
+
+.img_list_items .sortable-ghost {
+    opacity: .4;
+    background-color: #F4E2C9;
+}
