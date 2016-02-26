@@ -221,6 +221,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       ADD CONSTRAINT `kedlek_gallery_items_ibfk_1` FOREIGN KEY (`g_id`) REFERENCES `kedlek_gallery` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
     ");
+    
+    chmod("/lib/cache", 755);
+    chmod("/lib/templates_c/admin", 755);
+    chmod("/lib/templates_c/front", 755);
+
+    header('Location: /admin');
 
     header('Location: /admin');
 
