@@ -222,11 +222,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     ");
     
-    chmod("/lib/cache", 755);
-    chmod("/lib/templates_c/admin", 755);
-    chmod("/lib/templates_c/front", 755);
+    chmod("lib/cache", 755);
+    chmod("lib/templates_c/admin", 755);
+    chmod("lib/templates_c/front", 755);
+    chmod("install.php", 755);
 
-    header('Location: /admin');
+    unlink('install.php');
 
     header('Location: /admin');
 

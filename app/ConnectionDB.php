@@ -1,31 +1,5 @@
 <?php
-
-//Первичная установка
-if(file_exists('app/config.php')){
-
-    if(file_exists('install.php')){
-
-        unlink('install.php');
-
-    }
-
-    include "app/config.php";
-
-}else{
-
-    if(file_exists('install.php')){
-
-        header('Location: /install.php');
-        exit();
-
-    }else{
-
-        echo 'Фаил install.php - отсутствует.';
-        exit();
-
-    }
-
-}
+include "app/config.php";
 
 //Соединение с базой
 include "lib/NotORM.php";
