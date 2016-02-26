@@ -1,0 +1,29 @@
+{
+    "name": "KedlekCMS",
+    "minimum-stability": "stable",
+    "version": "1.0.1",
+    "description": "KedlekCMS",
+    "authors": [
+        {
+            "name": "Minin Alexandr",
+            "email": "a.s.minin@me.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"Cms\\": "app/"}
+    },
+    "require": {
+        "slim/slim": "~2.6",
+        "symfony/translation": "2.6.5",
+        "symfony/validator": "2.6.4",
+        "symfony/console": "~2.6",
+        "nesbot/carbon": "1.18.0",
+        "illuminate/contracts": "5.0.0",
+        "danielstjules/stringy": "1.9.0",
+        "illuminate/support": "5.0.4",
+        "illuminate/container": "5.0.4",
+        "illuminate/database": "5.0.4",
+        "illuminate/events": "5.0.4",
+        "swiftmailer/swiftmailer": "5.4.1"
+    }
+}
