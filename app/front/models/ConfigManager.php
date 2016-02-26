@@ -1,4 +1,7 @@
 <?php
+namespace Cms\Front\Models;
+
+use Cms\ConnectionDB;
 
 //Управление настройками
 class ConfigManager

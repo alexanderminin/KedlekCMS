@@ -1,4 +1,7 @@
 <?php
+namespace Cms\Admin\Controllers;
+
+use Cms\Admin\Models\AdminMessagesManager;
 
 //Контроллер главной страницы
 class CAdminHome extends CAdminController

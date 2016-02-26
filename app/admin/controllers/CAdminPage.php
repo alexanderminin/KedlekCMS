@@ -1,4 +1,7 @@
 <?php
+namespace Cms\Admin\Controllers;
+
+use Cms\Admin\Models\AdminPageManager;
 
 //Контроллер страниц
 class CAdminPage extends CAdminController
@@ -15,40 +18,40 @@ class CAdminPage extends CAdminController
     public $seo_keywords;
 
 
-    function __construct(){
+    function __construct(\Slim\Slim $context){
 
-        parent::__construct();
+        parent::__construct($context);
 
         $this->pages = new AdminPageManager();
 
-        if ($this->isPost()){
-
-            if(isset($_POST['id'])){
-                $this->id = abs((int)$_POST['id']);
+        if ($this->getContext()->request()->isPost()){
+            
+            if (!empty($this->getContext()->request()->post('id'))){
+                $this->id = abs((int)$this->getContext()->request()->post('id'));
             }
 
-            if(isset($_POST['url'])){
-                $this->url = $this->string_valid($_POST['url']);
+            if (!empty($this->getContext()->request()->post('url'))){
+                $this->url = $this->string_valid($this->getContext()->request()->post('url'));
+            }
+            
+            if (!empty($this->getContext()->request()->post('title'))){
+                $this->title = $this->string_valid($this->getContext()->request()->post('title'));
+            }
+            
+            if (!empty($this->getContext()->request()->post('text'))){
+                $this->text = trim($this->getContext()->request()->post('text'));
+            }
+            
+            if (!empty($this->getContext()->request()->post('seo_title'))){
+                $this->seo_title = $this->string_valid($this->getContext()->request()->post('seo_title'));
             }
 
-            if(isset($_POST['title'])){
-                $this->title = $this->string_valid($_POST['title']);
+            if (!empty($this->getContext()->request()->post('seo_descr'))){
+                $this->seo_descr = $this->string_valid($this->getContext()->request()->post('seo_title'));
             }
 
-            if(isset($_POST['text'])){
-                $this->text = trim($_POST['text']);
-            }
-
-            if(isset($_POST['seo_title'])){
-                $this->seo_title = $this->string_valid($_POST['seo_title']);
-            }
-
-            if(isset($_POST['seo_descr'])){
-                $this->seo_descr = $this->string_valid($_POST['seo_descr']);
-            }
-
-            if(isset($_POST['seo_keywords'])){
-                $this->seo_keywords = $this->string_valid($_POST['seo_keywords']);
+            if (!empty($this->getContext()->request()->post('seo_keywords'))){
+                $this->seo_keywords = $this->string_valid($this->getContext()->request()->post('seo_title'));
             }
 
         }

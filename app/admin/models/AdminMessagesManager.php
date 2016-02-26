@@ -1,4 +1,8 @@
-<?
+<?php
+namespace Cms\Admin\Models;
+
+use Cms\ConnectionDB;
+
 //сообщения
 class AdminMessagesManager
 {

@@ -1,4 +1,10 @@
 <?php
+namespace Cms\Admin\Controllers;
+
+use Cms\Admin\Models\AdminMenuManager;
+use Cms\Admin\Models\AdminPageManager;
+use Cms\Admin\Models\AdminCategoryManager;
+use Cms\Admin\Models\AdminGalleryManager;
 
 //Контроллер меню
 class CAdminMenu extends CAdminController
@@ -10,13 +16,13 @@ class CAdminMenu extends CAdminController
     public $menu;
     public $data;
 
-    function __construct(){
+    function __construct(\Slim\Slim $context){
 
-        parent::__construct();
+        parent::__construct($context);
 
         $this->menu = new AdminMenuManager();
 
-        if ($this->isPost()){
+        if ($this->getContext()->request()->isPost()){
 
             if(isset($_POST['id'])){
                 $this->id = abs((int)$_POST['id']);
@@ -38,6 +44,8 @@ class CAdminMenu extends CAdminController
         }
 
     }
+
+
 
 	//Вывод списка доступных страниц
     public function target_list(){

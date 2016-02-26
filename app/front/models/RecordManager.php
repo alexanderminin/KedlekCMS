@@ -1,4 +1,8 @@
 <?php
+namespace Cms\Front\Models;
+
+use Cms\ConnectionDB;
+
 //Управление записью
 class RecordManager
 {

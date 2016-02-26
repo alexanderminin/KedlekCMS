@@ -1,8 +1,10 @@
 <?php
-include "app/config.php";
+namespace Cms;
+
+include __DIR__."/config.php";
 
 //Соединение с базой
-include "lib/NotORM.php";
+include __DIR__."/../lib/NotORM.php";
 class ConnectionDB
 {
 
@@ -12,10 +14,10 @@ class ConnectionDB
     public $pdo;
 
     protected function __construct(){
-        $pdo = new PDO(DB_HOST, DB_USER, DB_PASS);
+        $pdo = new \PDO(DB_HOST, DB_USER, DB_PASS);
         $pdo->exec("set names utf8");
         $this->pdo = $pdo;
-        $this->db = new NotORM($pdo);
+        $this->db = new \NotORM($pdo);
         //$this->db->debug = true;
     }
 

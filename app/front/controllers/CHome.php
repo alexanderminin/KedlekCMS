@@ -1,4 +1,8 @@
 <?php
+namespace Cms\Front\Controllers;
+
+use Cms\Front\Models\PageManager;
+
 //Контроллер главной страницы
 class CHome extends CController
 {

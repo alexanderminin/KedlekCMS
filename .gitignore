@@ -4,8 +4,8 @@
 .DS_Store
 composer.phar
 vendor/
+config.php
 /app/config.php
 composer.lock
-/reports/*
 /lib/cache
 /lib/templates_c

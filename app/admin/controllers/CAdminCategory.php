@@ -1,4 +1,7 @@
 <?php
+namespace Cms\Admin\Controllers;
+
+use Cms\Admin\Models\AdminCategoryManager;
 
 //Контроллер категорий и записей
 class CAdminCategory extends CAdminController
@@ -18,13 +21,13 @@ class CAdminCategory extends CAdminController
     public $datetime;
 
 
-    function __construct(){
+    function __construct(\Slim\Slim $context){
 
-        parent::__construct();
+        parent::__construct($context);
 
         $this->category = new AdminCategoryManager();
 
-        if ($this->isPost()){
+        if ($this->getContext()->request()->isPost()){
 
             if(isset($_POST['id'])){
                 $this->id = abs((int)$_POST['id']);

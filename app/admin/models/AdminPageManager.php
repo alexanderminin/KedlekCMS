@@ -1,4 +1,7 @@
 <?php
+namespace Cms\Admin\Models;
+
+use Cms\ConnectionDB;
 
 //Управление страницами
 class AdminPageManager

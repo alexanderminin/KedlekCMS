@@ -1,4 +1,8 @@
 <?php
+namespace Cms\Front\Models;
+
+use Cms\ConnectionDB;
+
 //Управление Роутингом клиент. сайта
 class RoutingManager
 {

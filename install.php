@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $text .= "define('DB_USER', '" . $dbuser . "');" . "\r\n";
     $text .= "define('DB_PASS', '" . $dbpassword . "');" . "\r\n";
      
-    $fp = fopen("app/config.php", "w");
+    $fp = fopen("config.php", "w");
      
     fwrite($fp, $text);
      

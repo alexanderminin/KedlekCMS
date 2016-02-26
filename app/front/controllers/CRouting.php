@@ -1,4 +1,7 @@
 <?php
+namespace Cms\Front\Controllers;
+
+use Cms\Front\Models\RoutingManager;
 
 class CRouting extends CController
 {

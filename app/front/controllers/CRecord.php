@@ -1,4 +1,8 @@
 <?php
+namespace Cms\Front\Controllers;
+
+use Cms\Front\Models\RecordManager;
+
 //Контроллер записи
 class CRecord extends CController
 {

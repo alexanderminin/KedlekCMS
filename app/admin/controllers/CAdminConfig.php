@@ -1,4 +1,8 @@
 <?php
+namespace Cms\Admin\Controllers;
+
+use Cms\Admin\Models\AdminConfigManager;
+use Cms\Admin\Models\AdminPageManager;
 
 //Контроллер галереи
 class CAdminConfig extends CAdminController
@@ -7,13 +11,13 @@ class CAdminConfig extends CAdminController
     public $settings;
     public $config;
 
-    function __construct(){
+    function __construct(\Slim\Slim $context){
 
-        parent::__construct();
+        parent::__construct($context);
 
         $this->settings = new AdminConfigManager();
 
-        if ($this->isPost()){
+        if ($this->getContext()->request()->isPost()){
 
             if(isset($_POST['config'])){
                 $this->config = (array)$_POST['config'];
@@ -28,7 +32,7 @@ class CAdminConfig extends CAdminController
 
         foreach ($this->config as $config => $value) {
             
-            $result = $this->settings->updateConfig($config, $value);
+            $this->settings->updateConfig($config, $value);
 
         }
 
@@ -176,7 +180,6 @@ class CAdminConfig extends CAdminController
         $smarty->assign('css',$css);
 
         //Передача данных
-        $site_settings['home_url'] = $site_settings['home_url'];
         $site_settings['home_html'] = htmlspecialchars($site_settings['home_html']);
         $smarty->assign('pages',$pages);
         $smarty->assign('site_settings',$site_settings);

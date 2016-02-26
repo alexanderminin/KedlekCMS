@@ -1,4 +1,7 @@
 <?php
+namespace Cms\Admin\Controllers;
+
+use Cms\Admin\Models\AdminMessagesManager;
 
 //Контроллер сообщений
 class CAdminMessages extends CAdminController
@@ -7,13 +10,13 @@ class CAdminMessages extends CAdminController
     public $messages;
     public $id;
 
-    function __construct(){
+    function __construct(\Slim\Slim $context){
 
-        parent::__construct();
+        parent::__construct($context);
 
         $this->messages = new AdminMessagesManager();
 
-        if ($this->isPost()){
+        if ($this->getContext()->request()->isPost()){
 
             if(isset($_POST['id'])){
                 $this->id = abs((int)$_POST['id']);

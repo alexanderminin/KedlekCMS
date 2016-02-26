@@ -1,4 +1,8 @@
 <?php
+namespace Cms\Admin\Controllers;
+
+use Cms\Admin\Models\AdminGalleryManager;
+
 //Контроллер галереи
 class CAdminGallery extends CAdminController
 {
@@ -19,13 +23,13 @@ class CAdminGallery extends CAdminController
     public $seo_descr;
     public $seo_keywords;
 
-    function __construct(){
+    function __construct(\Slim\Slim $context){
 
-        parent::__construct();
+        parent::__construct($context);
 
         $this->gallery = new AdminGalleryManager();
 
-        if ($this->isPost()){
+        if ($this->getContext()->request()->isPost()){
 
             if(isset($_POST['title'])){
                 $this->title = $this->string_valid($_POST['title']);

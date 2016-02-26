@@ -1,6 +1,11 @@
 <?php
+namespace Cms\Admin\Controllers;
 
-class CAdminController
+use Cms\Admin\Models\AdminConfigManager;
+use Cms\Admin\Models\AdminMessagesManager;
+use Smarty;
+
+class CAdminController extends CAdminBase
 {
 
     //Содержит объект класса ConfigManager
@@ -12,7 +17,9 @@ class CAdminController
     //Содержит настройки сайта
     public $site_config;
 
-    function __construct(){
+    function __construct($context){
+
+        parent::__construct($context);
 
         //проверка авторизации
         $auth = new CAdminAuth();
@@ -134,7 +141,7 @@ class CAdminController
         $smarty->assign('menu',$this->action_menu());
 
         //Активный пункт  меню (для пометки активной страницы)
-        $smarty->assign('menu_active', '/' . implode("/", $this->params));
+        $smarty->assign('menu_active', $_SERVER['REQUEST_URI']);
 
         //Три последних сообщения
         $smarty->assign('last_messages',$this->lastMessages());
@@ -144,7 +151,7 @@ class CAdminController
         $smarty->assign('user_id',$_SESSION['user_id']);
 
         //Активный пункт  меню (для пометки активной страницы)
-        $smarty->assign('menu_active', '/' . implode("/", $this->params));
+        $smarty->assign('menu_active', $_SERVER['REQUEST_URI']);
 
         //Системные настройки сайта
         $smarty->assign('site_settings',$this->site_config);
@@ -153,20 +160,28 @@ class CAdminController
 
     }
 
-	//Проверка строк
+	  //Проверка строк
     public function string_valid($string){
 
         return trim(strip_tags($string));
 
     }
 
-	//Проверка на POST
+	  //Проверка на POST
     protected function isPost() {
         return $_SERVER['REQUEST_METHOD'] == 'POST';
     }
 
-	//Перенаправление на 404 страницу
+	  //Перенаправление на 404 страницу
     public function __call($name, $params){
+        
+        header('Location: /404');
+        exit();
+
+    }
+
+	  //Перенаправление на 404 страницу
+    public function action_404(){
         
         header('Location: /404');
         exit();

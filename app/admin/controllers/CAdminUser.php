@@ -1,4 +1,7 @@
 <?php
+namespace Cms\Admin\Controllers;
+
+use Cms\Admin\Models\AdminUserManager;
 
 //Контроллер пользователей
 class CAdminUser extends CAdminController
@@ -15,13 +18,13 @@ class CAdminUser extends CAdminController
     public $old_pass;
     public $new_pass;
 
-    function __construct(){
+    function __construct(\Slim\Slim $context){
 
-        parent::__construct();
+        parent::__construct($context);
 
         $this->users = new AdminUserManager();
 
-        if ($this->isPost()){
+        if ($this->getContext()->request()->isPost()){
 
             if(isset($_POST['id'])){
                 $this->id = abs((int)$_POST['id']);

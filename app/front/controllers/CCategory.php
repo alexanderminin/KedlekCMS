@@ -1,4 +1,8 @@
 <?php
+namespace Cms\Front\Controllers;
+
+use Cms\Front\Models\CategoryManager;
+
 //Контроллер страниц
 class CCategory extends CController
 {

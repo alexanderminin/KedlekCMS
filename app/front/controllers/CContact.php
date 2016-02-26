@@ -1,4 +1,6 @@
 <?php
+namespace Cms\Front\Controllers;
+
 //Контроллер страницы контактов
 class CContact extends CController
 {

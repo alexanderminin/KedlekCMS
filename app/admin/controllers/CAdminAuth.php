@@ -1,4 +1,7 @@
 <?php
+namespace Cms\Admin\Controllers;
+
+use Cms\Admin\Models\AdminUserManager;
 
 //Контроллер авторизации
 class CAdminAuth
@@ -51,7 +54,7 @@ class CAdminAuth
     function action_index(){
 
         ob_start();
-        include "templates/admin/login.page.tpl";
+        include ROOT_DIR."/templates/admin/login.page.tpl";
         echo ob_get_clean();  
 
     }

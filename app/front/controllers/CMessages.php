@@ -1,4 +1,8 @@
 <?php
+namespace Cms\Front\Controllers;
+
+use Cms\Front\Models\MessagesManager;
+
 //Контроллер сообщений
 class CMessages extends CController
 {

@@ -1,4 +1,8 @@
 <?php
+namespace Cms\Front\Controllers;
+
+use Cms\Front\Models\GalleryManager;
+
 //Контроллер галееи
 class CGallery extends CController
 {

@@ -1,4 +1,8 @@
 <?php
+namespace Cms\Front\Controllers;
+
+use Cms\Front\Models\ConfigManager;
+use Smarty;
 
 class CController
 {
@@ -33,7 +37,7 @@ class CController
         $menu = $this->config->selectMenu();
 
         //Сортируем массив меню по ключам
-        function array_sort($items){
+        function array_sort_it($items){
             $menu_arr = array();
             foreach ($items as $item) {
                 $menu_arr[$item['id']]['id'] = $item['id'];
@@ -68,7 +72,7 @@ class CController
         }
 
         //вывод результата
-        $menu = array_sort($menu);
+        $menu = array_sort_it($menu);
         $menu = build_tree($menu);
 
         return $menu;
