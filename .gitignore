@@ -1,0 +1,11 @@
+.realsync
+.bash_history
+.idea
+.DS_Store
+composer.phar
+vendor/
+/app/config.php
+composer.lock
+/reports/*
+/lib/cache
+/lib/templates_c
