@@ -19,8 +19,8 @@ class CAdminConfig extends CAdminController
 
         if ($this->getContext()->request()->isPost()){
 
-            if(isset($_POST['config'])){
-                $this->config = (array)$_POST['config'];
+            if (!empty($this->getContext()->request()->post('config'))){
+                $this->config = (array)$this->getContext()->request()->post('config');
             }
 
         }

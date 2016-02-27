@@ -1,17 +1,17 @@
 <?php
 namespace Cms\Front\Controllers;
 
-use Cms\Front\Models\PageManager;
+use Cms\Front\Models\FrontPageManager;
 
 //Контроллер страниц
-class CPage extends CController
+class CFrontPage extends CFrontController
 {
 
 	//Вывод шаблона страницы
     public function action_index(){
 
         //Получаем данные страницы
-        $page = new PageManager();
+        $page = new FrontPageManager();
         $item = $page->selectPage($this->params[0]);
 
         //Инициализация Smarty

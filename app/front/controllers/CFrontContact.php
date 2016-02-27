@@ -2,7 +2,7 @@
 namespace Cms\Front\Controllers;
 
 //Контроллер страницы контактов
-class CContact extends CController
+class CFrontContact extends CFrontController
 {
 
 	//Вывод шаблона страницы контактов

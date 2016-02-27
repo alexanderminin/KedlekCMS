@@ -29,49 +29,49 @@ class CAdminCategory extends CAdminController
 
         if ($this->getContext()->request()->isPost()){
 
-            if(isset($_POST['id'])){
-                $this->id = abs((int)$_POST['id']);
+            if (!empty($this->getContext()->request()->post('id'))){
+                $this->id = abs((int)$this->getContext()->request()->post('id'));
             }
 
-            if(isset($_POST['url'])){
-                $this->url = $this->string_valid($_POST['url']);
+            if (!empty($this->getContext()->request()->post('url'))){
+                $this->url = $this->string_valid($this->getContext()->request()->post('url'));
             }
 
-            if(isset($_POST['title'])){
-                $this->title = $this->string_valid($_POST['title']);
+            if (!empty($this->getContext()->request()->post('title'))){
+                $this->title = $this->string_valid($this->getContext()->request()->post('title'));
             }
 
-            if(isset($_POST['descr'])){
-                $this->descr = trim($_POST['descr']);
+            if (!empty($this->getContext()->request()->post('descr'))){
+                $this->descr = trim($this->getContext()->request()->post('descr'));
             }
 
-            if(isset($_POST['text'])){
-                $this->text = trim($_POST['text']);
+            if (!empty($this->getContext()->request()->post('text'))){
+                $this->text = trim($this->getContext()->request()->post('text'));
             }
 
-            if(isset($_POST['seo_title'])){
-                $this->seo_title = $this->string_valid($_POST['seo_title']);
+            if (!empty($this->getContext()->request()->post('seo_title'))){
+                $this->seo_title = $this->string_valid($this->getContext()->request()->post('seo_title'));
             }
 
-            if(isset($_POST['seo_descr'])){
-                $this->seo_descr = $this->string_valid($_POST['seo_descr']);
+            if (!empty($this->getContext()->request()->post('seo_descr'))){
+                $this->seo_descr = $this->string_valid($this->getContext()->request()->post('seo_descr'));
             }
 
-            if(isset($_POST['seo_keywords'])){
-                $this->seo_keywords = $this->string_valid($_POST['seo_keywords']);
+            if (!empty($this->getContext()->request()->post('seo_keywords'))){
+                $this->seo_keywords = $this->string_valid($this->getContext()->request()->post('seo_keywords'));
             }
 
-            if(isset($_POST['category_id'])){
-                $this->category_id = abs((int)$_POST['category_id']);
+            if (!empty($this->getContext()->request()->post('category_id'))){
+                $this->category_id = abs((int)$this->getContext()->request()->post('category_id'));
             }
 
-            if(isset($_POST['file'])){
-                $this->file = $this->string_valid($_POST['file']);
+            if (!empty($this->getContext()->request()->post('file'))){
+                $this->file = $this->string_valid($this->getContext()->request()->post('file'));
             }
-
-            if(isset($_POST['date']) && isset($_POST['time'])){
-                $date = $this->string_valid($_POST['date']);
-                $time = $this->string_valid($_POST['time']);
+            
+            if(!empty($this->getContext()->request()->post('date')) && !empty($this->getContext()->request()->post('time'))){
+                $date = $this->string_valid($this->getContext()->request()->post('date'));
+                $time = $this->string_valid($this->getContext()->request()->post('time'));
                 $this->datetime = $date . ' ' . $time . ':00';
             }
 
@@ -195,7 +195,7 @@ class CAdminCategory extends CAdminController
 	//Вывод шаблона обновления категории
     public function action_updcategory(){
 
-        $item = $this->category->selectCategory($this->params[3]);
+        $item = $this->category->selectCategory($this->params);
 
         //Настройки
         $title = 'Редактирование категории';
@@ -249,10 +249,10 @@ class CAdminCategory extends CAdminController
 	//Удаление категории
     public function action_delcategory(){
 
-        $count = $this->category->countRecords($this->params[3]);
+        $count = $this->category->countRecords($this->params);
 
         if($count == 0){
-            $result = $this->category->deleteCategory($this->params[3]);
+            $result = $this->category->deleteCategory($this->params);
 
             if ($result == true) {
                 header('Location: /admin/category');
@@ -342,11 +342,11 @@ class CAdminCategory extends CAdminController
 	//Вывод шаблона записи
     public function action_records(){
 
-        $result = $this->category->selectCategory($this->params[3]);
+        $result = $this->category->selectCategory($this->params);
         $category = array();
         $category_title = $result['title'];
         
-        $items = $this->category->selectAllRecords($this->params[3]);
+        $items = $this->category->selectAllRecords($this->params);
 
         //Настройки
         $title = 'Список записей';
@@ -445,7 +445,7 @@ class CAdminCategory extends CAdminController
 
         $category = $this->category->selectCategoryMenu();
          
-        $item = $this->category->selectRecord($this->params[3]);
+        $item = $this->category->selectRecord($this->params);
 
         //Настройки
         $title = 'Редактирование записи';
@@ -508,14 +508,14 @@ class CAdminCategory extends CAdminController
 	//Удаление записи
     public function action_delrecord(){
 
-        $result = $this->category->deleteRecord($this->params[3]);
+        $result = $this->category->deleteRecord($this->params);
 
         if ($result == true) {
-            header('Location: /admin/category/records/' . $this->params[3]);
+            header('Location: /admin/category/records/' . $this->params);
             exit();
         }else{
             $_SESSION['error'] = $result;
-            header('Location: /admin/category/records/' . $this->params[3]);
+            header('Location: /admin/category/records/' . $this->params);
             exit();
         }
 

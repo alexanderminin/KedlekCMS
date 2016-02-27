@@ -4,7 +4,7 @@ namespace Cms\Front\Models;
 use Cms\ConnectionDB;
 
 //сообщения
-class MessagesManager
+class FrontMessagesManager
 {
     
     private $db;

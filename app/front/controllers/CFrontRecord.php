@@ -1,17 +1,17 @@
 <?php
 namespace Cms\Front\Controllers;
 
-use Cms\Front\Models\RecordManager;
+use Cms\Front\Models\FrontRecordManager;
 
 //Контроллер записи
-class CRecord extends CController
+class CFrontRecord extends CFrontController
 {
 
 	//Вывод шаблона записи
     public function action_index(){
 
         //Получаем данные страницы
-        $class = new RecordManager();
+        $class = new FrontRecordManager();
         $record = $class->selectRecord($this->params[1]);
 
         //Инициализация Smarty

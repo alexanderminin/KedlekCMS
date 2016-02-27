@@ -4,7 +4,7 @@ namespace Cms\Front\Models;
 use Cms\ConnectionDB;
 
 //Управление Роутингом клиент. сайта
-class RoutingManager
+class FrontRoutingManager
 {
 
     private $db;
@@ -25,7 +25,7 @@ class RoutingManager
 
                 if(strlen(utf8_decode($params[1])) <= 4 && substr($params[1], 0) > 0){
 
-                    return array('CCategory', 'action_index');
+                    return array('CFrontCategory', 'action_index');
 
                 } else {
 
@@ -33,7 +33,7 @@ class RoutingManager
 
                     if (count($result) > 0) {
 
-                        return array('CRecord', 'action_index');
+                        return array('CFrontRecord', 'action_index');
 
                     } else {
 
@@ -45,7 +45,7 @@ class RoutingManager
 
             } else {
 
-                return array('CCategory', 'action_index');
+                return array('CFrontCategory', 'action_index');
 
             }
 
@@ -59,7 +59,7 @@ class RoutingManager
 
                 if(strlen(utf8_decode($params[1])) <= 4 && substr($params[1], 0) > 0){
 
-                    return array('CGallery', 'action_index');
+                    return array('CFrontGallery', 'action_index');
 
                 } else {
 
@@ -67,7 +67,7 @@ class RoutingManager
 
                     if (count($result) > 0) {
 
-                        return array('CGallery', 'action_view');
+                        return array('CFrontGallery', 'action_view');
 
                     } else {
 
@@ -79,7 +79,7 @@ class RoutingManager
 
             } else {
 
-                return array('CGallery', 'action_index');
+                return array('CFrontGallery', 'action_index');
 
             }
 
@@ -90,7 +90,7 @@ class RoutingManager
 
         if (count($result) > 0) {
 
-                return array('CPage', 'action_index');
+                return array('CFrontPage', 'action_index');
 
         } else {
 

@@ -24,21 +24,21 @@ class CAdminMenu extends CAdminController
 
         if ($this->getContext()->request()->isPost()){
 
-            if(isset($_POST['id'])){
-                $this->id = abs((int)$_POST['id']);
+
+            if (!empty($this->getContext()->request()->post('id'))){
+                $this->id = abs((int)$this->getContext()->request()->post('id'));
             }
 
-
-            if(isset($_POST['title'])){
-                $this->title = $this->string_valid($_POST['title']);
+            if (!empty($this->getContext()->request()->post('title'))){
+                $this->title = $this->string_valid($this->getContext()->request()->post('title'));
             }
 
-            if(isset($_POST['target'])){
-                $this->target = $this->string_valid($_POST['target']);
+            if (!empty($this->getContext()->request()->post('target'))){
+                $this->target = $this->string_valid($this->getContext()->request()->post('target'));
             }
 
-            if(isset($_POST['data'])){
-                $this->data = $this->string_valid($_POST['data']);
+            if (!empty($this->getContext()->request()->post('data'))){
+                $this->data = $this->string_valid($this->getContext()->request()->post('data'));
             }
 
         }
@@ -204,7 +204,7 @@ class CAdminMenu extends CAdminController
 	//Удаление пункта меню
     public function action_del(){
 
-        $result = $this->menu->deleteMenu($this->params[3]);
+        $result = $this->menu->deleteMenu($this->params);
 
         if ($result == true) {
             header('Location: /admin/menu');

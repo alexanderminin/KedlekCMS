@@ -1,10 +1,10 @@
 <?php
 namespace Cms\Front\Controllers;
 
-use Cms\Front\Models\PageManager;
+use Cms\Front\Models\FrontPageManager;
 
 //Контроллер главной страницы
-class CHome extends CController
+class CFrontHome extends CFrontController
 {
 
 
@@ -18,7 +18,7 @@ class CHome extends CController
         //Получаем данные главной страницы
         if($this->site_config['home_url'] != ''){
 
-            $page = new PageManager();
+            $page = new FrontPageManager();
             $item = $page->selectPage($this->site_config['home_url']);
 
             //Общие настройки страницы

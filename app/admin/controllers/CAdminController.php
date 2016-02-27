@@ -3,10 +3,14 @@ namespace Cms\Admin\Controllers;
 
 use Cms\Admin\Models\AdminConfigManager;
 use Cms\Admin\Models\AdminMessagesManager;
-use Smarty;
+use Cms\Admin\Models\AdminUserManager;
 
-class CAdminController extends CAdminBase
+class CAdminController
 {
+    /**
+     * @var \Slim\Slim
+     */
+    private $context;
 
     //Содержит объект класса ConfigManager
     public $config;
@@ -17,14 +21,26 @@ class CAdminController extends CAdminBase
     //Содержит настройки сайта
     public $site_config;
 
-    function __construct($context){
+    private $login;
+    private $password;
+    private $users;
 
-        parent::__construct($context);
+    function __construct(\Slim\Slim $context){
 
+        $this->context = $context;
+        
         //проверка авторизации
-        $auth = new CAdminAuth();
-        $check = $auth->action_check();
-
+        $this->users = new AdminUserManager();
+        if ($this->getContext()->request()->isPost()) {
+            if (!empty($this->getContext()->request()->post('login')) && !empty($this->getContext()->request()->post('password'))) {
+                $this->login = $this->string_valid($this->getContext()->request()->post('login'));
+                $this->password = $this->string_valid($this->getContext()->request()->post('password'));
+                $this->action_auth();
+            }
+        }
+        
+        $this->action_check();
+        
         //Извлекаем текущие настройки
         $this->config = new AdminConfigManager();
         $site_settings = $this->config->selectConfig();
@@ -34,8 +50,64 @@ class CAdminController extends CAdminBase
         foreach ($site_settings as $site_setting) {
             $this->site_config[$site_setting['config']] = $site_setting['value'];
         }
+        
+    }
+
+    protected static $instance;
+    public static function getInstance(\Slim\Slim $app)
+    {
+        if (is_null(self::$instance[get_called_class()])) {
+            self::$instance[get_called_class()] = new static($app);
+        }
+        return self::$instance[get_called_class()];
+    }
+
+    protected function getContext() {
+        return $this->context;
+    }
 
 
+    //проверка сессии
+    function action_check(){
+        if(isset($_SESSION['auth'])){
+            if ($_SESSION['auth'] != 'auth') {
+                $this->action_login();
+                exit();
+            }
+        }else{
+            $this->action_login();
+            exit();
+        }
+    }
+
+    //вывод страницы авторизации
+    function action_login(){
+        ob_start();
+        include ROOT_DIR."/templates/admin/login.page.tpl";
+        echo ob_get_clean();
+    }
+
+    //авторизация 
+    function action_auth(){
+        $result = $this->users->authUser($this->login, $this->password);
+        if($result){
+            header("Location: /admin/home");
+            exit();
+        }else{
+            $_SESSION['error'] = 'Ошибка авторизации';
+            header("Location: /admin/login");
+            exit();
+        }
+    }
+
+    //выход
+    function action_logout(){
+        unset($_SESSION['user_id']);
+        unset($_SESSION['auth']);
+        unset($_SESSION['role']);
+        session_destroy();
+        header("Location: /admin/login");
+        exit();
     }
 
     //Список пунктов меню
@@ -117,7 +189,7 @@ class CAdminController extends CAdminBase
     //Инициализация Smarty
     protected function SmartyInit(){
 
-        $smarty = new Smarty();
+        $smarty = new \Smarty();
 
         //Определим основные директории
         $smarty->setConfigDir('lib/configs');
@@ -162,29 +234,6 @@ class CAdminController extends CAdminBase
 
 	  //Проверка строк
     public function string_valid($string){
-
         return trim(strip_tags($string));
-
-    }
-
-	  //Проверка на POST
-    protected function isPost() {
-        return $_SERVER['REQUEST_METHOD'] == 'POST';
-    }
-
-	  //Перенаправление на 404 страницу
-    public function __call($name, $params){
-        
-        header('Location: /404');
-        exit();
-
-    }
-
-	  //Перенаправление на 404 страницу
-    public function action_404(){
-        
-        header('Location: /404');
-        exit();
-
     }
 }

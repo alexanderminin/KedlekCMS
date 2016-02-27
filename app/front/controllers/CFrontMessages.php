@@ -1,10 +1,10 @@
 <?php
 namespace Cms\Front\Controllers;
 
-use Cms\Front\Models\MessagesManager;
+use Cms\Front\Models\FrontMessagesManager;
 
 //Контроллер сообщений
-class CMessages extends CController
+class CFrontMessages extends CFrontController
 {
 
     public $messages;
@@ -13,40 +13,28 @@ class CMessages extends CController
     public $name;
     public $phone;
 
-    function __construct(){
+    function __construct(\Slim\Slim $context){
 
-        parent::__construct();
+        parent::__construct($context);
 
-        $this->messages = new MessagesManager();
+        $this->messages = new FrontMessagesManager();
 
-        if ($this->isPost()){
+        if ($this->getContext()->request()->isPost()){
 
-            if(isset($_POST['phone'])){
-                $this->phone = $_POST['phone'];
+            if (!empty($this->getContext()->request()->post('phone'))){
+                $this->phone = $this->getContext()->request()->post('phone');
             }
 
-        }
-
-        if ($this->isPost()){
-
-            if(isset($_POST['type'])){
-                $this->type = $_POST['type'];
+            if (!empty($this->getContext()->request()->post('type'))){
+                $this->type = $this->getContext()->request()->post('type');
             }
 
-        }
-
-        if ($this->isPost()){
-
-            if(isset($_POST['text'])){
-                $this->text = $_POST['text'];
+            if (!empty($this->getContext()->request()->post('text'))){
+                $this->text = $this->getContext()->request()->post('text');
             }
 
-        }
-
-        if ($this->isPost()){
-
-            if(isset($_POST['name'])){
-                $this->name = $_POST['name'];
+            if (!empty($this->getContext()->request()->post('name'))){
+                $this->name = $this->getContext()->request()->post('name');
             }
 
         }

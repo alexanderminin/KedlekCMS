@@ -18,8 +18,8 @@ class CAdminMessages extends CAdminController
 
         if ($this->getContext()->request()->isPost()){
 
-            if(isset($_POST['id'])){
-                $this->id = abs((int)$_POST['id']);
+            if (!empty($this->getContext()->request()->post('id'))){
+                $this->id = abs((int)$this->getContext()->request()->post('id'));
             }
 
         }
@@ -29,7 +29,7 @@ class CAdminMessages extends CAdminController
 	//Помечаем сообщение как прочитанное
     public function action_read(){
 
-        $result = $this->messages->markIsRead($this->params[3]);
+        $result = $this->messages->markIsRead($this->params);
 
         if ($result == true) {
             header('Location: /admin/messages');
@@ -91,7 +91,7 @@ class CAdminMessages extends CAdminController
 	//Удаление сообщения
     public function action_del(){
 
-        $result = $this->messages->deleteMessage($this->params[3]);
+        $result = $this->messages->deleteMessage($this->params);
 
         if ($result == true) {
             header('Location: /admin/messages');

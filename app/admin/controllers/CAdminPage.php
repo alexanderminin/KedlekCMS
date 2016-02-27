@@ -173,7 +173,7 @@ class CAdminPage extends CAdminController
 	//Вывод шаблона страницы
     public function action_page(){
 
-        $item = $this->pages->selectPage($this->params[3]);
+        $item = $this->pages->selectPage($this->params);
 
         //Настройки
         $title = 'Страница';
@@ -230,7 +230,7 @@ class CAdminPage extends CAdminController
 	//Удаление страницы
     public function action_del(){
 
-        $result = $this->pages->deletePage($this->params[3]);
+        $result = $this->pages->deletePage($this->params);
 
         if ($result == true) {
             header('Location: /admin/pages');

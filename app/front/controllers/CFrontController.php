@@ -1,11 +1,14 @@
 <?php
 namespace Cms\Front\Controllers;
 
-use Cms\Front\Models\ConfigManager;
-use Smarty;
+use Cms\Front\Models\FrontConfigManager;
 
-class CController
+class CFrontController
 {
+    /**
+     * @var \Slim\Slim
+     */
+    private $context;
 
     //Содержит объект класса ConfigManager
     public $config;
@@ -16,10 +19,10 @@ class CController
     //Содержит настройки сайта
     public $site_config;
 
-    function __construct(){
+    function __construct(\Slim\Slim $context){
 
         //Извлекаем текущие настройки
-        $this->config = new ConfigManager();
+        $this->config = new FrontConfigManager();
         $site_settings = $this->config->selectConfig();
 
         //Формируем список настроек
@@ -27,7 +30,23 @@ class CController
         foreach ($site_settings as $site_setting) {
             $this->site_config[$site_setting['config']] = $site_setting['value'];
         }
+        
+        $this->context = $context;
 
+    }
+
+
+    protected static $instance;
+    public static function getInstance(\Slim\Slim $app)
+    {
+        if (is_null(self::$instance[get_called_class()])) {
+            self::$instance[get_called_class()] = new static($app);
+        }
+        return self::$instance[get_called_class()];
+    }
+
+    protected function getContext() {
+        return $this->context;
     }
 
     //Список пунктов меню
@@ -82,7 +101,7 @@ class CController
     //Инициализация Smarty
     protected function SmartyInit(){
 
-        $smarty = new Smarty();
+        $smarty = new \Smarty();
 
         //Определим основные директории
         $smarty->setConfigDir('lib/configs');
@@ -120,18 +139,5 @@ class CController
         return $smarty;
 
     }
-
-	//Проверка на POST 
-    protected function isPost() {
-        return $_SERVER['REQUEST_METHOD'] == 'POST';
-    }
-
-	//Вывод шаблона 404 страницы
-    public function __call($name, $params){
-        
-        header('Location: /404');
-        exit();
-
-    }
-
+    
 }

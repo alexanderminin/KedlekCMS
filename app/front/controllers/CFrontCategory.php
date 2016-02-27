@@ -1,17 +1,17 @@
 <?php
 namespace Cms\Front\Controllers;
 
-use Cms\Front\Models\CategoryManager;
+use Cms\Front\Models\FrontCategoryManager;
 
 //Контроллер страниц
-class CCategory extends CController
+class CFrontCategory extends CFrontController
 {
 
 	//Вывод шаблона категорий
     public function action_index(){
 
         //Получаем данные категории
-        $class = new CategoryManager();
+        $class = new FrontCategoryManager();
         $category = $class->selectCategory($this->params[0]);
         $records = $class->selectRecords($category['id']);
 

@@ -4,7 +4,7 @@ namespace Cms\Front\Models;
 use Cms\ConnectionDB;
 
 //Управление записью
-class RecordManager
+class FrontRecordManager
 {
 
     private $db;

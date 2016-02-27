@@ -26,40 +26,40 @@ class CAdminUser extends CAdminController
 
         if ($this->getContext()->request()->isPost()){
 
-            if(isset($_POST['id'])){
-                $this->id = abs((int)$_POST['id']);
+            if (!empty($this->getContext()->request()->post('id'))){
+                $this->id = abs((int)$this->getContext()->request()->post('id'));
             }
 
-            if(isset($_POST['login'])){
-                $this->login = $this->string_valid($_POST['login']);
+            if (!empty($this->getContext()->request()->post('login'))){
+                $this->login = $this->string_valid($this->getContext()->request()->post('login'));
             }
 
-            if(isset($_POST['new_login'])){
-                $this->new_login = $this->string_valid($_POST['new_login']);
+            if (!empty($this->getContext()->request()->post('new_login'))){
+                $this->new_login = $this->string_valid($this->getContext()->request()->post('new_login'));
             }
 
-            if(isset($_POST['password'])){
-                $this->password = $this->string_valid($_POST['password']);
+            if (!empty($this->getContext()->request()->post('password'))){
+                $this->password = $this->string_valid($this->getContext()->request()->post('password'));
             }
 
-            if(isset($_POST['fio'])){
-                $this->fio = $this->string_valid($_POST['fio']);
+            if (!empty($this->getContext()->request()->post('fio'))){
+                $this->fio = $this->string_valid($this->getContext()->request()->post('fio'));
             }
 
-            if(isset($_POST['role'])){
-                $this->role = $this->string_valid($_POST['role']);
+            if (!empty($this->getContext()->request()->post('role'))){
+                $this->role = $this->string_valid($this->getContext()->request()->post('role'));
             }
 
-            if(isset($_POST['mail'])){
-                $this->mail = $this->string_valid($_POST['mail']);
+            if (!empty($this->getContext()->request()->post('mail'))){
+                $this->mail = $this->string_valid($this->getContext()->request()->post('mail'));
             }
 
-            if(isset($_POST['old_pass'])){
-                $this->old_pass = $this->string_valid($_POST['old_pass']);
+            if (!empty($this->getContext()->request()->post('old_pass'))){
+                $this->old_pass = $this->string_valid($this->getContext()->request()->post('old_pass'));
             }
 
-            if(isset($_POST['new_pass'])){
-                $this->new_pass = $this->string_valid($_POST['new_pass']);
+            if (!empty($this->getContext()->request()->post('new_pass'))){
+                $this->new_pass = $this->string_valid($this->getContext()->request()->post('new_pass'));
             }
 
         }
@@ -168,7 +168,7 @@ class CAdminUser extends CAdminController
 	//Вывод шаблона профиля пользователя
     public function action_user(){
         
-        $item = $this->users->selectUser($this->params[3]);
+        $item = $this->users->selectUser($this->params);
 
 
         //Настройки
@@ -203,14 +203,14 @@ class CAdminUser extends CAdminController
 	//Удаление пользователя
     public function action_del(){
 
-        $result = $this->users->deleteUser($this->params[3]);
+        $result = $this->users->deleteUser($this->params);
 
         if ($result == true) {
             header('Location: /admin/users');
             exit();
         }else{
             $_SESSION['error'] = 'Ошибка удаления';
-            header('Location: /admin/users/user' . $this->params[3]);
+            header('Location: /admin/users/user' . $this->params);
             exit();
         }
 

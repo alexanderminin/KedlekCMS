@@ -4,7 +4,7 @@ namespace Cms\Front\Models;
 use Cms\ConnectionDB;
 
 //Управление страницами
-class PageManager
+class FrontPageManager
 {
     private $db;
 

@@ -4,7 +4,7 @@ namespace Cms\Front\Models;
 use Cms\ConnectionDB;
 
 //Управление галерей
-class GalleryManager
+class FrontGalleryManager
 {
 
     private $db;

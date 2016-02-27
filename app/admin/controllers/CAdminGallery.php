@@ -31,60 +31,60 @@ class CAdminGallery extends CAdminController
 
         if ($this->getContext()->request()->isPost()){
 
-            if(isset($_POST['title'])){
-                $this->title = $this->string_valid($_POST['title']);
+            if (!empty($this->getContext()->request()->post('title'))){
+                $this->title = $this->string_valid($this->getContext()->request()->post('title'));
             }
 
-            if(isset($_POST['descr'])){
-                $this->descr = $this->string_valid($_POST['descr']);
+            if (!empty($this->getContext()->request()->post('descr'))){
+                $this->descr = $this->string_valid($this->getContext()->request()->post('descr'));
             }
 
-            if(isset($_POST['datetime'])){
-                $this->datetime = $this->string_valid($_POST['datetime']);
+            if (!empty($this->getContext()->request()->post('datetime'))){
+                $this->datetime = $this->string_valid($this->getContext()->request()->post('datetime'));
             }
 
-            if(isset($_POST['file'])){
-                $this->file = $this->string_valid($_POST['file']);
+            if (!empty($this->getContext()->request()->post('file'))){
+                $this->file = $this->string_valid($this->getContext()->request()->post('file'));
             }
 
-            if(isset($_POST['type'])){
-                $this->type = abs((int)$_POST['type']);
+            if (!empty($this->getContext()->request()->post('type'))){
+                $this->type = abs((int)$this->getContext()->request()->post('type'));
             }
 
-            if(isset($_POST['id'])){
-                $this->id = abs((int)$_POST['id']);
+            if (!empty($this->getContext()->request()->post('id'))){
+                $this->id = abs((int)$this->getContext()->request()->post('id'));
             }
 
-            if(isset($_POST['url'])){
-                $this->url = $this->string_valid($_POST['url']);
+            if (!empty($this->getContext()->request()->post('url'))){
+                $this->url = $this->string_valid($this->getContext()->request()->post('url'));
             }
 
-            if(isset($_POST['g_id'])){
-                $this->g_id = abs((int)$_POST['g_id']);
+            if (!empty($this->getContext()->request()->post('g_id'))){
+                $this->g_id = abs((int)$this->getContext()->request()->post('g_id'));
             }
 
-            if(isset($_POST['gallery_list_id'])){
-                $this->gallery_list_id = abs((int)$_POST['gallery_list_id']);
+            if (!empty($this->getContext()->request()->post('gallery_list_id'))){
+                $this->gallery_list_id = abs((int)$this->getContext()->request()->post('gallery_list_id'));
             }
 
-            if(isset($_POST['position'])){
-                $this->position = $this->string_valid($_POST['position']);
+            if (!empty($this->getContext()->request()->post('position'))){
+                $this->position = $this->string_valid($this->getContext()->request()->post('position'));
             }
 
-            if(isset($_POST['ord'])){
-                $this->ord = $this->string_valid($_POST['ord']);
+            if (!empty($this->getContext()->request()->post('ord'))){
+                $this->ord = $this->string_valid($this->getContext()->request()->post('ord'));
             }
 
-            if(isset($_POST['seo_title'])){
-                $this->seo_title = $this->string_valid($_POST['seo_title']);
+            if (!empty($this->getContext()->request()->post('seo_title'))){
+                $this->seo_title = $this->string_valid($this->getContext()->request()->post('seo_title'));
             }
 
-            if(isset($_POST['seo_descr'])){
-                $this->seo_descr = $this->string_valid($_POST['seo_descr']);
+            if (!empty($this->getContext()->request()->post('seo_descr'))){
+                $this->seo_descr = $this->string_valid($this->getContext()->request()->post('seo_descr'));
             }
 
-            if(isset($_POST['seo_keywords'])){
-                $this->seo_keywords = $this->string_valid($_POST['seo_keywords']);
+            if (!empty($this->getContext()->request()->post('seo_keywords'))){
+                $this->seo_keywords = $this->string_valid($this->getContext()->request()->post('seo_keywords'));
             }
 
         }
@@ -223,7 +223,7 @@ class CAdminGallery extends CAdminController
     //Вывод шаблона обновления раздела галереи
     public function action_updgallerylist(){
 
-        $item = $this->gallery->selectGalleryList($this->params[3]);
+        $item = $this->gallery->selectGalleryList($this->params);
 
         //Настройки
         $title = 'Редактирование раздела галереи';
@@ -263,10 +263,10 @@ class CAdminGallery extends CAdminController
     //Удаление раздела галереи с проверкой на наличие элементов
     public function action_del_gallery_list(){
 
-        $count = $this->gallery->countGallery($this->params[3]);
+        $count = $this->gallery->countGallery($this->params);
 
         if($count == 0){
-            $result = $this->gallery->deleteGalleryList($this->params[3]);
+            $result = $this->gallery->deleteGalleryList($this->params);
 
             if ($result == true) {
                 header('Location: /admin/gallerylist');
@@ -416,7 +416,7 @@ class CAdminGallery extends CAdminController
     //Удаление элемента галереи
     public function action_del(){
 
-        $result = $this->gallery->deleteGallery($this->params[3]);
+        $result = $this->gallery->deleteGallery($this->params);
 
         if ($result == true) {
             header('Location: /admin/gallerylist');
@@ -432,10 +432,10 @@ class CAdminGallery extends CAdminController
     //Вывод шаблона списка элементов галереи
     public function action_gallery(){
 
-        $result = $this->gallery->selectGalleryList($this->params[3]);
+        $result = $this->gallery->selectGalleryList($this->params);
         $gallery_title = $result['title'];
         
-        $items = $this->gallery->selectAllGallery($this->params[3]);
+        $items = $this->gallery->selectAllGallery($this->params);
 
         //Настройки
         $javascript = 
@@ -575,7 +575,7 @@ class CAdminGallery extends CAdminController
     public function action_updgallery(){
 
         $gallery_list = $this->gallery->selectGalleryListMenu();
-        $g_id = $this->params[3];
+        $g_id = $this->params;
         $item = $this->gallery->selectGallery($g_id);
         $items = $this->gallery->selectGalleryItems($g_id);
 
@@ -636,7 +636,7 @@ class CAdminGallery extends CAdminController
     public function action_updgalleryvideo(){
 
         $gallery_list = $this->gallery->selectGalleryListMenu();
-        $item = $this->gallery->selectGallery($this->params[3]);
+        $item = $this->gallery->selectGallery($this->params);
 
         //Настройки
         $title = 'Редактировать видео';
@@ -728,10 +728,10 @@ class CAdminGallery extends CAdminController
     public function action_delitem(){
 
 
-        $id = $this->gallery->selectGalleryItem($this->params[3]);
+        $id = $this->gallery->selectGalleryItem($this->params);
 
 
-        $result = $this->gallery->deleteGalleryItem($this->params[3]);
+        $result = $this->gallery->deleteGalleryItem($this->params);
 
         if ($result == true) {
             header('Location: /admin/gallerylist/updgallery/' . $id['g_id']);
