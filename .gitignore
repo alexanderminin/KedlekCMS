@@ -7,6 +7,4 @@ vendor/
 config.php
 /app/config.php
 composer.lock
-/lib/cache/*
-/lib/templates_c/*
 /images/*
