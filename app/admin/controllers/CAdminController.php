@@ -25,8 +25,8 @@ class CAdminController
     function __construct(\Slim\Slim $context){
         $this->context = $context;
         //проверка авторизации
-        if ($this->getContext()->request()->isPost()) {
-            if (!empty($this->getContext()->request()->post('auth_login')) && !empty($this->getContext()->request()->post('auth_password'))) {
+        if ($this->getContext()->request()->isPost()){
+            if (!empty($this->getContext()->request()->post('auth_login')) && !empty($this->getContext()->request()->post('auth_password'))){
                 $this->login = $this->string_valid($this->getContext()->request()->post('auth_login'));
                 $this->password = $this->string_valid($this->getContext()->request()->post('auth_password'));
                 $this->action_auth();
@@ -38,21 +38,21 @@ class CAdminController
         $site_settings = MAdminConfig::selectConfig();
 
         //Формируем список настроек
-        $this->site_config = array();
-        foreach ($site_settings as $site_setting) {
+        $this->site_config = [];
+        foreach ($site_settings as $site_setting){
             $this->site_config[$site_setting['config']] = $site_setting['value'];
         }
     }
     
     public static function getInstance(\Slim\Slim $app)
     {
-        if (is_null(self::$instance[get_called_class()])) {
+        if (is_null(self::$instance[get_called_class()])){
             self::$instance[get_called_class()] = new static($app);
         }
         return self::$instance[get_called_class()];
     }
 
-    protected function getContext() {
+    protected function getContext(){
         return $this->context;
     }
     
@@ -81,7 +81,6 @@ class CAdminController
                 $_SESSION['auth'] = 'auth';
                 $_SESSION['role'] = $result['role'];
                 $_SESSION['user_id'] =  $result['id'];
-                
                 header("Location: /admin/home");
                 exit();
             }
@@ -157,7 +156,7 @@ class CAdminController
         $unread_messages = MAdminMessages::selectLast3Unread();
         $last_messages = [];
         $c = 0;
-        foreach ($unread_messages as $unread_message) {
+        foreach ($unread_messages as $unread_message){
             $last_messages[$c]['name'] = $unread_message['name'];
             $last_messages[$c]['phone'] = $unread_message['phone'];
             $last_messages[$c]['text'] = $unread_message['text'];

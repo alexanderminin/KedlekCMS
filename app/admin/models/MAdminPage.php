@@ -14,7 +14,7 @@ class MAdminPage
 
     //Вывод страницы
     public static function selectPage($id){
-        return DB::table('kedlek_pages')->where('$id', $id)->first();
+        return DB::table('kedlek_pages')->where('id', $id)->first();
     }
     
     //проверка на уникальность url
@@ -38,7 +38,7 @@ class MAdminPage
     }
 
     //Добавление страницы
-    public static function addPage($url, $title, $text, $seo_title, $seo_descr, $seo_keywords) {
+    public static function addPage($url, $title, $text, $seo_title, $seo_descr, $seo_keywords){
         return DB::table('kedlek_pages')->insertGetId([
           "url" => $url,
           "title" => $title,

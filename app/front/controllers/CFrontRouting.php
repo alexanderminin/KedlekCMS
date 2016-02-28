@@ -12,7 +12,8 @@ class CFrontRouting extends CFrontController
             header('Location: /index');
             exit();
         } else {
-            $controller = new $result[0]();
+            $c = new \ReflectionClass('\Cms\Front\Controllers\\' . $result[0]);
+            $controller = $c->newInstance($this->context);
             $action = $result[1];
             $controller->params = $this->params;
             $controller->$action();

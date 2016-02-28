@@ -46,9 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `url` varchar(255) NOT NULL,
       `title` varchar(255) NOT NULL,
-      `seo_title` varchar(255) NOT NULL,
-      `seo_descr` varchar(255) NOT NULL,
-      `seo_keywords` varchar(255) NOT NULL,
+      `seo_title` varchar(255) NULL,
+      `seo_descr` varchar(255) NULL,
+      `seo_keywords` varchar(255) NULL,
       PRIMARY KEY (`id`),
       UNIQUE KEY `url` (`url`)
     ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
@@ -58,13 +58,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       `category_id` int(11) NOT NULL,
       `url` varchar(255) NOT NULL,
       `title` varchar(255) NOT NULL,
-      `descr` text NOT NULL,
-      `text` text NOT NULL,
-      `seo_descr` varchar(255) NOT NULL,
-      `seo_keywords` varchar(255) NOT NULL,
-      `seo_title` varchar(255) NOT NULL,
-      `file` varchar(255) NOT NULL,
-      `thumb` varchar(255) NOT NULL,
+      `descr` text NULL,
+      `text` text NULL,
+      `seo_descr` varchar(255) NULL,
+      `seo_keywords` varchar(255) NULL,
+      `seo_title` varchar(255) NULL,
+      `file` varchar(255) NULL,
+      `thumb` varchar(255) NULL,
       `datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       PRIMARY KEY (`id`),
       UNIQUE KEY `url` (`url`)
@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     CREATE TABLE IF NOT EXISTS `kedlek_config` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `config` varchar(255) NOT NULL,
-      `value` text NOT NULL,
+      `value` text NULL,
       PRIMARY KEY (`id`),
       UNIQUE KEY `config` (`config`)
     ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=38 ;
@@ -122,14 +122,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     CREATE TABLE IF NOT EXISTS `kedlek_gallery` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `url` varchar(255) NOT NULL,
-      `title` varchar(255) DEFAULT NULL,
+      `title` varchar(255) NULL,
       `descr` text,
       `type` int(11) NOT NULL DEFAULT '1',
       `file` varchar(255) NOT NULL,
       `thumb` varchar(255) NOT NULL,
-      `seo_title` varchar(255) NOT NULL,
-      `seo_descr` varchar(255) NOT NULL,
-      `seo_keywords` varchar(255) NOT NULL,
+      `seo_title` varchar(255) NULL,
+      `seo_descr` varchar(255) NULL,
+      `seo_keywords` varchar(255) NULL,
       `datetime` date DEFAULT NULL,
       `gallery_list_id` int(11) NOT NULL,
       PRIMARY KEY (`id`),
@@ -151,9 +151,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `url` varchar(255) NOT NULL,
       `title` varchar(255) NOT NULL,
-      `seo_title` varchar(255) NOT NULL,
-      `seo_descr` varchar(255) NOT NULL,
-      `seo_keywords` varchar(255) NOT NULL,
+      `seo_title` varchar(255) NULL,
+      `seo_descr` varchar(255) NULL,
+      `seo_keywords` varchar(255) NULL,
       PRIMARY KEY (`id`),
       UNIQUE KEY `url` (`url`)
     ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
@@ -162,15 +162,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `parent_id` int(11) NOT NULL DEFAULT '0',
       `title` varchar(255) NOT NULL,
-      `ord` int(11) NOT NULL DEFAULT '0',
-      `target` varchar(255) NOT NULL,
+      `ord` int(11) NULL DEFAULT '0',
+      `target` varchar(255) NULL,
       `active` enum('1','2') NOT NULL DEFAULT '1',
       PRIMARY KEY (`id`)
     ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
 
     INSERT INTO `kedlek_menu` (`id`, `parent_id`, `title`, `ord`, `target`, `active`) VALUES
-    (2, 0, 'Главная', 2, '/home', '2'),
-    (10, 0, 'Контакты', 13, '/contact', '2');
+    (1, 0, 'Главная', 1, '/home', '2'),
+    (2, 0, 'Контакты', 2, '/contact', '2');
 
     CREATE TABLE IF NOT EXISTS `kedlek_messages` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -187,10 +187,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `url` varchar(255) NOT NULL,
       `title` varchar(255) NOT NULL,
-      `text` text NOT NULL,
-      `seo_title` varchar(255) NOT NULL,
-      `seo_descr` varchar(255) NOT NULL,
-      `seo_keywords` varchar(255) NOT NULL,
+      `text` text NULL,
+      `seo_title` varchar(255) NULL,
+      `seo_descr` varchar(255) NULL,
+      `seo_keywords` varchar(255) NULL,
       `datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (`id`),
       UNIQUE KEY `url` (`url`)

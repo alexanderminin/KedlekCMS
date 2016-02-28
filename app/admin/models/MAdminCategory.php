@@ -51,7 +51,7 @@ class MAdminCategory
     }
 
     //Добавление категории
-    public static function addCategory($url, $title, $seo_title, $seo_descr, $seo_keywords) {
+    public static function addCategory($url, $title, $seo_title, $seo_descr, $seo_keywords){
         $data = [
             "url" => $url,
             "title" => $title,
@@ -96,7 +96,7 @@ class MAdminCategory
     }
  
     //Добавление записи
-    public static function addRecord($category_id, $url, $title, $descr, $text, $seo_title, $seo_descr, $seo_keywords, $file, $thumb, $datetime) {
+    public static function addRecord($category_id, $url, $title, $descr, $text, $seo_title, $seo_descr, $seo_keywords, $file, $thumb, $datetime){
         $data = [
             "category_id" => $category_id,
             "url" => $url,

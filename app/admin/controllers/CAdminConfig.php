@@ -20,7 +20,7 @@ class CAdminConfig extends CAdminController
 
 	  //Обновление настроек
     public function action_update(){
-        foreach ($this->config as $config => $value) {
+        foreach ($this->config as $config => $value){
             MAdminConfig::updateConfig($config, $value);
         }
         header('Location:' . $_SERVER['HTTP_REFERER']);
@@ -173,7 +173,7 @@ class CAdminConfig extends CAdminController
             $result = @file_get_contents('http://bytehand.com:3800/balance?id='.$bytehandId.'&key='.$bytehandKey);
             if ($result === false){
                 $balance = 'Нет инф.';
-            }else{
+            } else {
                 $result = json_decode($result);
                 $balance = round($result->description, 2) . ' р.';
             }

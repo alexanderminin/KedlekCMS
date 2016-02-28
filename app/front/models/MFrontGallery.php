@@ -8,7 +8,7 @@ class MFrontGallery
 {
     //Вывод раздела
     public static function selectGalleryList($url){
-        return DB::table('kedlek_gallery_list')->where('url', $url)->get();
+        return DB::table('kedlek_gallery_list')->where('url', $url)->first();
     }
 
     //Вывод списка галереи

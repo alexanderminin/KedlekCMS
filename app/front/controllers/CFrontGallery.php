@@ -24,21 +24,21 @@ class CFrontGallery extends CFrontController
         $Per_Page = $this->site_config['gallery_per_page'];
 
         //Если кол-во элементов превышает то выводим пагинатор
-        if($Num_Rows > $Per_Page){
+        if ($Num_Rows > $Per_Page){
 
             //Текущий номер страницы
-            if (!isset($this->params[1])) {
+            if (!isset($this->params[1])){
                 $Page=1;
-            }else{
+            } else {
                 $Page = $this->params[1];
             }
             $smarty->assign('Page',$Page);
 
             //Точка отсчета
             $Page_Start = (($Per_Page*$Page)-$Per_Page);
-            if ($Num_Rows<=$Per_Page) {
+            if ($Num_Rows<=$Per_Page){
                 $Num_Pages =1;
-            } elseif (($Num_Rows % $Per_Page)==0) {
+            } elseif (($Num_Rows % $Per_Page)==0){
                 $Num_Pages =($Num_Rows/$Per_Page) ;
             } else {
                 $Num_Pages =($Num_Rows/$Per_Page)+1;
@@ -47,12 +47,12 @@ class CFrontGallery extends CFrontController
 
             //Точка завершения
             $Page_End = $Per_Page * $Page;
-            if ($Page_End > $Num_Rows) {
+            if ($Page_End > $Num_Rows){
                 $Page_End = $Num_Rows;
             }
 
             //Формирование списка записей на странице
-            $item = array();
+            $item = [];
             for($i=$Page_Start;$i<$Page_End;$i++){
                 $item[] = $items[$i];
             }
@@ -60,35 +60,35 @@ class CFrontGallery extends CFrontController
 
             //Кнопка Пред.
             $Prev_Page = $Page-1;
-            if($Prev_Page > 0){
+            if ($Prev_Page > 0){
                 $smarty->assign('Prev_Page',$Prev_Page);
             }
 
             //Кнопка след
             $Next_Page = $Page+1;
-             if($Num_Pages != $Page){
+            if ($Num_Pages != $Page){
                 $smarty->assign('Next_Page',$Next_Page);
             }
 
             //Стартовое значение для ссылок пагинатора
             $start = $Page - 4;
-            if($start <= 0){
+            if ($start <= 0){
                 $start = 1;
             }
 
             //Конечное значение для ссылок пагинатора
             $ost = $Num_Pages - $Page;
-            if($ost === 0){
+            if ($ost === 0){
                 $end = $Page;
-            }else if($ost > 5){
+            } elseif ($ost > 5){
                 $end = $Page + 4;
-            }else{
+            } else {
                 $end = $Page + $ost;
             }
 
             //Формирование ссылок пагинатора
-            $pag_urls = array();
-            for ($i=$start; $i<=$end; $i++) {
+            $pag_urls = [];
+            for ($i=$start; $i<=$end; $i++){
                 $pag_urls[] = $i;
             }
             $smarty->assign('pag_urls',$pag_urls);

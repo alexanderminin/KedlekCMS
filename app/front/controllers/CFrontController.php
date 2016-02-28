@@ -8,7 +8,7 @@ class CFrontController
     /**
      * @var \Slim\Slim
      */
-    private $context;
+    protected $context;
     protected static $instance;
 
     //Содержит GET переменные
@@ -23,21 +23,21 @@ class CFrontController
         $site_settings = MFrontConfig::selectConfig();
 
         //Формируем список настроек
-        $this->site_config = array();
-        foreach ($site_settings as $site_setting) {
+        $this->site_config = [];
+        foreach ($site_settings as $site_setting){
             $this->site_config[$site_setting['config']] = $site_setting['value'];
         }
     }
     
     public static function getInstance(\Slim\Slim $app)
     {
-        if (is_null(self::$instance[get_called_class()])) {
+        if (is_null(self::$instance[get_called_class()])){
             self::$instance[get_called_class()] = new static($app);
         }
         return self::$instance[get_called_class()];
     }
 
-    protected function getContext() {
+    protected function getContext(){
         return $this->context;
     }
 
@@ -49,8 +49,8 @@ class CFrontController
 
         //Сортируем массив меню по ключам
         function array_sort_it($items){
-            $menu_arr = array();
-            foreach ($items as $item) {
+            $menu_arr = [];
+            foreach ($items as $item){
                 $menu_arr[$item['id']]['id'] = $item['id'];
                 $menu_arr[$item['id']]['parent_id'] = $item['parent_id'];
                 $menu_arr[$item['id']]['title'] = $item['title'];
@@ -105,7 +105,7 @@ class CFrontController
         $smarty->assign('menu',$this->action_menu());
 
         //Активный пункт  меню (для пометки активной страницы)
-        $param = array();
+        $param = [];
         $param[] = $this->params[0];
         if(isset($this->params[1])){
             $param[] = $this->params[1];

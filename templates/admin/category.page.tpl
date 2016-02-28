@@ -25,7 +25,7 @@
                   <tr>
 
                     <td><a href="/admin/category/records/{$item.id}">{$item.title}</td>
-                    <td>{$item.count}</td>
+                    <td>{$item.cnt}</td>
                     <td>
 
                         <a href="/admin/category/updcategory/{$item.id}" class="btn btn-xs btn-warning">

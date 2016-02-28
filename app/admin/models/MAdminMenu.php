@@ -17,12 +17,12 @@ class MAdminMenu
     }
 
     //Добавление меню
-    public static function addMenu($title, $target) {
+    public static function addMenu($title, $target){
         $data = [
             "title" => $title,
             "target" => $target
         ];
-        return DB::table('kedlek_users')->insertGetId($data);
+        return DB::table('kedlek_menu')->insertGetId($data);
     }
 
     //Обновление порядка меню

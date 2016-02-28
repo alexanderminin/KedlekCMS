@@ -58,11 +58,11 @@ class CAdminUser extends CAdminController
           "mail" => $this->mail,
           "role" => $this->role
         ];
-        $id = MAdminUser::addUser($data);
-        if ($id) {
-            header('Location: /admin/users/user/' . $id);
+        $result = MAdminUser::addUser($data);
+        if ($result){
+            header('Location: /admin/users/user/' . $result);
             exit();
-        }else{
+        } else {
             $_SESSION['error'] = 'Ошибка добавления';
             header('Location: /admin/users');
             exit();
@@ -72,13 +72,13 @@ class CAdminUser extends CAdminController
 	  //Обновление пользователя
     public function action_update(){
         $result = MAdminUser::updateUser($this->id, $this->login, $this->new_login, $this->fio, $this->mail, $this->role);
-        if ($result) {
+        if ($result){
             $_SESSION['message'] = 'Пользователь обновлен';
             $_SESSION['role'] = $this->role;
             header('Location: /admin/users/user/' . $this->id);
             exit();
-        }else{
-            $_SESSION['error'] = 'Ошибка обновления';
+        } else {
+            if ($result !== 0) $_SESSION['error'] = 'Ошибка обновления';
             header('Location: /admin/users/user/'. $this->id);
             exit();
         }
@@ -87,12 +87,12 @@ class CAdminUser extends CAdminController
 	  //Обновление пароля
     public function action_updatepass(){
         $result = MAdminUser::updateUserPass($this->id, $this->old_pass, $this->new_pass);
-        if ($result) {
+        if ($result){
             $_SESSION['message'] = 'Пароль обновлен';
             header('Location: /admin/users/user/' . $this->id);
             exit();
-        }else{
-            $_SESSION['error'] = 'Ошибка';
+        } else {
+            if ($result !== 0) $_SESSION['error'] = 'Ошибка';
             header('Location: /admin/users/user/'. $this->id);
             exit();
         }
@@ -173,10 +173,10 @@ class CAdminUser extends CAdminController
 	  //Удаление пользователя
     public function action_del(){
         $result = MAdminUser::deleteUser($this->params);
-        if ($result) {
+        if ($result){
             header('Location: /admin/users');
             exit();
-        }else{
+        } else {
             $_SESSION['error'] = 'Ошибка удаления';
             header('Location: /admin/users/user' . $this->params);
             exit();

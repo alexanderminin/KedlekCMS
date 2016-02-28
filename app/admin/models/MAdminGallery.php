@@ -49,7 +49,7 @@ class MAdminGallery
     }
 
     //Добавление галереи
-    public static function addGalleryList($url, $title, $seo_title, $seo_descr, $seo_keywords) {
+    public static function addGalleryList($url, $title, $seo_title, $seo_descr, $seo_keywords){
         $data = [
             "url" => $url,
             "title" => $title,
@@ -104,7 +104,7 @@ class MAdminGallery
     }
 
     //Добавление галереи
-    public static function addGallery($title, $descr, $datetime, $type, $file, $thumb, $seo_title, $seo_descr, $seo_keywords, $gallery_list_id, $url) {
+    public static function addGallery($title, $descr, $datetime, $type, $file, $thumb, $seo_title, $seo_descr, $seo_keywords, $gallery_list_id, $url){
         $data = [
             "title" => $title,
             "descr" => $descr,
@@ -122,7 +122,7 @@ class MAdminGallery
     }
 
     //Добавление элемента галереи
-    public static function addGalleryItem($file, $thumb, $g_id) {
+    public static function addGalleryItem($file, $thumb, $g_id){
         $data = [
             "file" => $file,
             "thumb" => $thumb,

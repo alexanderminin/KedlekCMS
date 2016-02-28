@@ -37,7 +37,7 @@ class CAdminMenu extends CAdminController
     public function target_list(){
         $pages = MAdminPage::selectAllPages();
         $target = '<optgroup label="Страницы">';
-        foreach ($pages as $page) {
+        foreach ($pages as $page){
             $target .= '<option value="/' . $page['url'] . '">' . $page['title'] . '</option>';
         }
         $target .= '</optgroup>';
@@ -45,7 +45,7 @@ class CAdminMenu extends CAdminController
         
         $category = MAdminCategory::selectCategoryMenu();
 
-        foreach ($category as $cat) {
+        foreach ($category as $cat){
             $target .= '<option value="/' . $cat['url'] . '">' . $cat['title'] . '</option>';
         }
 
@@ -54,7 +54,7 @@ class CAdminMenu extends CAdminController
 
         $gallery_list = MAdminGallery::selectGalleryListMenu();
 
-        foreach ($gallery_list as $gallery) {
+        foreach ($gallery_list as $gallery){
             $target .= '<option value="/' . $gallery['url'] . '">' . $gallery['title'] . '</option>';
         }
         $target .= '</optgroup>';
@@ -65,7 +65,7 @@ class CAdminMenu extends CAdminController
 	  //Добавление пункта меню
     public function action_add(){
         $result = MAdminMenu::addMenu($this->title, $this->target);
-        if ($result) {
+        if ($result){
             header('Location: /admin/menu');
             exit();
         } else {
@@ -82,8 +82,8 @@ class CAdminMenu extends CAdminController
         $targets = $this->target_list();
         //сортируем массив по ключам
         function array_sort($items){
-            $menu_arr = array();
-            foreach ($items as $item) {
+            $menu_arr = [];
+            foreach ($items as $item){
                 $menu_arr[$item['id']]['id'] = $item['id'];
                 $menu_arr[$item['id']]['parent_id'] = $item['parent_id'];
                 $menu_arr[$item['id']]['title'] = $item['title'];
@@ -96,7 +96,7 @@ class CAdminMenu extends CAdminController
 
         //создание древовидного массива
         function build_tree($data){
-            $tree = array();
+            $tree = [];
             foreach($data as $id => &$row){
                 if($row['parent_id'] == '0'){
                     $tree[$id] = &$row;
@@ -154,7 +154,7 @@ class CAdminMenu extends CAdminController
 	  //Удаление пункта меню
     public function action_del(){
         $result = MAdminMenu::deleteMenu($this->params);
-        if ($result == true) {
+        if ($result == true){
             header('Location: /admin/menu');
             exit();
         } else {
@@ -165,14 +165,14 @@ class CAdminMenu extends CAdminController
     }
 
 	  //Преобразование массива в древовидный
-    public function parseJsonArray($jsonArray, $parentID = 0) {
+    public function parseJsonArray($jsonArray, $parentID = 0){
       $return = [];
-      foreach ($jsonArray as $subArray) {
-        $returnSubSubArray = array();
-        if (isset($subArray['children'])) {
+      foreach ($jsonArray as $subArray){
+        $returnSubSubArray = [];
+        if (isset($subArray['children'])){
       $returnSubSubArray = $this->parseJsonArray($subArray['children'], $subArray['id']);
         }
-        $return[] = array('id' => $subArray['id'], 'parent_id' => $parentID);
+        $return[] = ['id' => $subArray['id'], 'parent_id' => $parentID];
         $return = array_merge($return, $returnSubSubArray);
       }
       return $return;
@@ -183,7 +183,7 @@ class CAdminMenu extends CAdminController
         $this->data = json_decode($this->data, true);
         $items = $this->parseJsonArray($this->data);
         $c = 1;
-        foreach ($items as $item) {
+        foreach ($items as $item){
             MAdminMenu::updateMenu($item['id'], $item['parent_id'], $c, '2');
             $c++;
         }
@@ -195,7 +195,7 @@ class CAdminMenu extends CAdminController
     public function action_update(){
         $this->data = json_decode($this->data, true);
         $items = $this->parseJsonArray($this->data);
-        foreach ($items as $item) {
+        foreach ($items as $item){
             MAdminMenu::updateMenu($item['id'], '0', '0', '1');
         }
         echo 'Меню обновлено';

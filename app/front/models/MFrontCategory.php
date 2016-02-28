@@ -8,7 +8,7 @@ class MFrontCategory
 {
     //Вывод категории
     public static function selectCategory($url){
-        return DB::table('kedlek_category')->where('url', $url)->get();
+        return DB::table('kedlek_category')->where('url', $url)->first();
     }
 
     //Вывод записей

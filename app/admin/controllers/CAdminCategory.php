@@ -64,7 +64,7 @@ class CAdminCategory extends CAdminController
 	  //Добавление категории
     public function action_add_category(){
         $result = MAdminCategory::addCategory($this->url, $this->title, $this->seo_title, $this->seo_descr, $this->seo_keywords);
-        if ($result) {
+        if ($result){
             header('Location: /admin/category');
             exit();
         } else {
@@ -77,11 +77,11 @@ class CAdminCategory extends CAdminController
 	  //Обновление категории
     public function action_update_category(){
         $result = MAdminCategory::updateCategory($this->id, $this->url, $this->title, $this->seo_title, $this->seo_descr, $this->seo_keywords);
-        if ($result) {
+        if ($result){
             header('Location: /admin/category');
             exit();
         } else {
-            $_SESSION['error'] = 'Ошибка обновления';
+            if ($result !== 0) $_SESSION['error'] = 'Ошибка обновления';
             header('Location: /admin/category');
             exit();
         }
@@ -211,7 +211,7 @@ class CAdminCategory extends CAdminController
         $count = MAdminCategory::countRecords($this->params);
         if($count == 0){
             $result = MAdminCategory::deleteCategory($this->params);
-            if ($result) {
+            if ($result){
                 header('Location: /admin/category');
                 exit();
             } else {
@@ -246,7 +246,7 @@ class CAdminCategory extends CAdminController
     public function action_add_record(){
         $thumb = $this->action_thumb_path();
         $result = MAdminCategory::addRecord($this->category_id, $this->url, $this->title, $this->descr, $this->text, $this->seo_title, $this->seo_descr, $this->seo_keywords, $this->file, $thumb, $this->datetime);
-        if ($result) {
+        if ($result){
             header('Location: /admin/category/records/' . $this->category_id);
             exit();
         } else {
@@ -260,11 +260,11 @@ class CAdminCategory extends CAdminController
     public function action_update_record(){
         $thumb = $this->action_thumb_path();
         $result = MAdminCategory::updateRecord($this->id, $this->category_id, $this->url, $this->title, $this->descr, $this->text, $this->seo_title, $this->seo_descr, $this->seo_keywords, $this->file, $thumb, $this->datetime);
-        if ($result == true) {
+        if ($result){
             header('Location: /admin/category/records/' . $this->category_id);
             exit();
-        }else{
-            $_SESSION['error'] = $result;
+        } else {
+            if ($result !== 0) $_SESSION['error'] = 'Ошибка обновления';
             header('Location: /admin/category/records/' . $this->category_id);
             exit();
         }
@@ -425,7 +425,7 @@ class CAdminCategory extends CAdminController
 	  //Удаление записи
     public function action_delrecord(){
         $result = MAdminCategory::deleteRecord($this->params);
-        if ($result) {
+        if ($result){
             header('Location: /admin/category/records/' . $this->params);
             exit();
         } else {

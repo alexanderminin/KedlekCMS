@@ -20,10 +20,10 @@ class CAdminMessages extends CAdminController
 	  //Помечаем сообщение как прочитанное
     public function action_read(){
         $result = MAdminMessages::markIsRead($this->params);
-        if ($result) {
+        if ($result){
             header('Location: /admin/messages');
             exit();
-        }else{
+        } else {
             $_SESSION['error'] = 'Ошибка';
             header('Location: /admin/messages');
             exit();
@@ -76,10 +76,10 @@ class CAdminMessages extends CAdminController
 	  //Удаление сообщения
     public function action_del(){
         $result = MAdminMessages::deleteMessage($this->params);
-        if ($result) {
+        if ($result){
             header('Location: /admin/messages');
             exit();
-        }else{
+        } else {
             $_SESSION['error'] = 'Ошибка удаления';
             header('Location: /admin/messages');
             exit();

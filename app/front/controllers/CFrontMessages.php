@@ -31,13 +31,13 @@ class CFrontMessages extends CFrontController
     }
 
 	  //Отправка смс
-    function sendSMS($text) {
+    function sendSMS($text){
         $to = $this->site_config['sms_phone'];
         $bytehandId = $this->site_config['bytehandId'];
         $bytehandKey = $this->site_config['bytehandKey'];
         $bytehandFrom = $this->site_config['bytehandFrom'];
         $result = @file_get_contents('http://bytehand.com:3800/send?id='.$bytehandId.'&key='.$bytehandKey.'&to='.urlencode($to).'&from='.urlencode($bytehandFrom).'&text='.urlencode($text));
-        if ($result === false) {
+        if ($result === false){
             return false;
         } else {
             return true;
@@ -58,7 +58,7 @@ class CFrontMessages extends CFrontController
             $this->sendSMS($message);
         }
         
-        if ($result == true) {
+        if ($result == true){
             exit(true);
         } else {
             exit(false);
@@ -79,7 +79,7 @@ class CFrontMessages extends CFrontController
             $this->sendSMS($message);
         }
 
-        if ($result == true) {
+        if ($result == true){
             exit(true);
         } else {
             exit(false);
@@ -88,13 +88,13 @@ class CFrontMessages extends CFrontController
 
 	  //Отправка сообщения из контактной формы
     public function action_contactform(){
-        if($_POST) {
+        if($_POST){
             $to_email = $this->site_config['contact_mail'];
-            if(!isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
-                $output = json_encode(array(
+            if(!isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest'){
+                $output = json_encode([
                     'type'=>'error', 
                     'text' => 'Извините но запрос должен быть: Ajax POST'
-                ));
+                ]);
                 die($output);
             } 
             
@@ -105,11 +105,11 @@ class CFrontMessages extends CFrontController
             $message        = filter_var($_POST["msg"], FILTER_SANITIZE_STRING);
             
             if(!filter_var($user_email, FILTER_VALIDATE_EMAIL)){ 
-                $output = json_encode(array('type'=>'error', 'text' => 'Введите корректный email адрес'));
+                $output = json_encode(['type'=>'error', 'text' => 'Введите корректный email адрес']);
                 die($output);
             }
             if(!filter_var($phone_number, FILTER_SANITIZE_NUMBER_FLOAT)){
-                $output = json_encode(array('type'=>'error', 'text' => 'Номер телефона должен состоять из цифр.'));
+                $output = json_encode(['type'=>'error', 'text' => 'Номер телефона должен состоять из цифр.']);
                 die($output);
             }
  
@@ -141,10 +141,10 @@ class CFrontMessages extends CFrontController
             
             if(!$send_mail)
             {
-                $output = json_encode(array('type'=>'error', 'text' => 'Ошибка. Сообщение неможет быть отправлено.'));
+                $output = json_encode(['type'=>'error', 'text' => 'Ошибка. Сообщение неможет быть отправлено.']);
                 die($output);
-            }else{
-                $output = json_encode(array('type'=>'message', 'text' => $user_name .' спасибо вам за сообщение. Скоро мы вам ответим.'));
+            } else {
+                $output = json_encode(['type'=>'message', 'text' => $user_name .' спасибо вам за сообщение. Скоро мы вам ответим.']);
                 die($output);
             }
         }

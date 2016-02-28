@@ -32,9 +32,10 @@ $app->group('/admin', function () use ($app) {
       $controller = new \Cms\Admin\Controllers\CAdminMenu($app);
       $controller->action_add();
     })->via('GET', 'POST')->name('admin_menu_add');
-    $app->map('/del', function () use ($app) {
+    $app->map('/del/:id', function ($id) use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminMenu */
       $controller = new \Cms\Admin\Controllers\CAdminMenu($app);
+      $controller->params = $id;
       $controller->action_del();
     })->via('GET', 'POST')->name('admin_menu_del');
     $app->map('/updateactive', function () use ($app) {
@@ -534,19 +535,11 @@ $app->map('/:link_1', function ($link_1) use ($app) {
   $controller = new \Cms\Front\Controllers\CFrontRouting($app);
   $controller->params[0] = $link_1;
   $controller->action_index();
-})->via('GET', 'POST')->name('route');
+})->via('GET', 'POST');
 $app->map('/:link_1/:link_2', function ($link_1, $link_2) use ($app) {
   /** @var $controller \Cms\Front\Controllers\CFrontRouting */
   $controller = new \Cms\Front\Controllers\CFrontRouting($app);
   $controller->params[0] = $link_1;
   $controller->params[1] = $link_2;
   $controller->action_index();
-})->via('GET', 'POST')->name('route');
-$app->map('/:link_1/:link_2/:link_3', function ($link_1, $link_2, $link_3) use ($app) {
-  /** @var $controller \Cms\Front\Controllers\CFrontRouting */
-  $controller = new \Cms\Front\Controllers\CFrontRouting($app);
-  $controller->params[0] = $link_1;
-  $controller->params[1] = $link_2;
-  $controller->params[2] = $link_3;
-  $controller->action_index();
-})->via('GET', 'POST')->name('route');
+})->via('GET', 'POST');

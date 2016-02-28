@@ -9,7 +9,7 @@ class MAdminUser
 
     //Вывод пользователя(ей)
     public static function selectUser($id = null){
-        if($id) {
+        if($id){
             return DB::table('kedlek_users')->where('id', $id)->first();
         } else {
             return DB::table('kedlek_users')->get();
@@ -33,9 +33,9 @@ class MAdminUser
 
     //Обновление пользователя
     public static function updateUser($id, $login, $new_login, $fio, $mail, $role){
-        if ($login != $new_login) {
+        if ($login != $new_login){
             $login_isset = self::getUserByLogin($new_login);
-            if (!empty($login_isset)) {
+            if (!empty($login_isset)){
                 return false;
             }
         }

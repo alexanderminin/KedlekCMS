@@ -43,9 +43,9 @@ class CAdminPage extends CAdminController
 
 	  //Добавление страницы
     public function action_add(){
-        $id = MAdminPage::addPage($this->url, $this->title, $this->text, $this->seo_title, $this->seo_descr, $this->seo_keywords);
-        if ($id) {
-            header('Location: /admin/pages/page/' . $id);
+        $result = MAdminPage::addPage($this->url, $this->title, $this->text, $this->seo_title, $this->seo_descr, $this->seo_keywords);
+        if ($result){
+            header('Location: /admin/pages/page/' . $result);
             exit();
         } else {
             $_SESSION['error'] = 'Ошибка добавления';
@@ -57,11 +57,11 @@ class CAdminPage extends CAdminController
 	  //Обновление страницы
     public function action_update(){
         $result = MAdminPage::updatePage($this->id, $this->url, $this->title, $this->text, $this->seo_title, $this->seo_descr, $this->seo_keywords);
-        if ($result) {
+        if ($result){
             header('Location: /admin/pages/page/' . $this->id);
             exit();
         } else {
-            $_SESSION['error'] = 'Ошибка обновления';
+            if ($result !== 0) $_SESSION['error'] = 'Ошибка обновления';
             header('Location: /admin/pages/page/'. $this->id);
             exit();
         }
@@ -195,7 +195,7 @@ class CAdminPage extends CAdminController
 	  //Удаление страницы
     public function action_del(){
         $result = MAdminPage::deletePage($this->params);
-        if ($result) {
+        if ($result){
             header('Location: /admin/pages');
             exit();
         } else {

@@ -25,7 +25,7 @@
                   <tr>
 
                     <td><a href="/admin/gallerylist/gallery/{$item.id}">{$item.title}</td>
-                    <td>{$item.count}</td>
+                    <td>{$item.cnt}</td>
                     <td>
 
                         <a href="/admin/gallerylist/updgallerylist/{$item.id}" class="btn btn-xs btn-warning">
