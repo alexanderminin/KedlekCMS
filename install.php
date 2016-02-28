@@ -21,7 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
     $mail = $_POST['mail'];
 
-    $text = "<?php\r\n";
+    $text  = "<?php\r\n";
+    $text .= "return [\r\n";
     $text .= "  'debug' => true,\r\n";
     $text .= "  'illuminate_db' => [\r\n";
     $text .= "    'driver'    => 'mysql',\r\n";
@@ -38,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     fwrite($fp, $text);
     fclose($fp);
 
-    $pdo = new PDO($host, $dbuser, $dbpassword);
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $dbuser, $dbpassword);
     $pdo->exec("set names utf8");
 
     $stmt = $pdo->query("
