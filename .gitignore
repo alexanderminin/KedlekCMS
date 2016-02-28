@@ -5,6 +5,8 @@
 composer.phar
 vendor/
 config.php
-/app/config.php
 composer.lock
-/images/*
+images/*
+lib/cache/*
+lib/templates_c/admin/*
+lib/templates_c/front/*
