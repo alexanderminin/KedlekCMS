@@ -1,12 +1,11 @@
 Данный проект создан исключительно в академических и личных целях. Использовать его в ваших проектах крайне не рекомендую.
 
-<a href="http://demo.cms.kedlek.ru/admin" target="_blanc">Демо проекта</a>
-
 <b>Логин:</b> demo <b>Пароль:</b> demo
 
 <h2>История изменений:</h2>
 <ul>
 <li><b>0.1b</b> — Релиз на GitHub.</li>
+<li><b>1.0</b> — Переход на Slim Framework + Illuminate DB</li>
 </ul>
 
 <h2>История проекта:</h2>
@@ -20,7 +19,8 @@
 
 <ul>
 <li><b>RESPONSIVE filemanager</b> — Файловый менеджер для загрузки фотографий</li>
-<li><b>NotORM</b> — Взаимодействие с БД</li>
+<li><b>Slim Framework</b> — Основа проекта</li>
+<li><b>Illuminate DB</b> — Взаимодействие с БД</li>
 <li><b>Smarty</b> — Шаблонизатор (как для клиентской, так и административной части)</li>
 <li><b>Bootstrap</b> — Общий каркас</li>
 <li><b>Bootstrap Image Gallery</b> — Галерея изображений</li>
