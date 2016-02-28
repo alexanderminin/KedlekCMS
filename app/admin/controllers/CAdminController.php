@@ -1,9 +1,9 @@
 <?php
 namespace Cms\Admin\Controllers;
 
-use Cms\Admin\Models\AdminConfigManager;
-use Cms\Admin\Models\AdminMessagesManager;
-use Cms\Admin\Models\AdminUserManager;
+use Cms\Admin\Models\MAdminConfig;
+use Cms\Admin\Models\MAdminMessages;
+use Cms\Admin\Models\MAdminUser;
 
 class CAdminController
 {
@@ -11,9 +11,7 @@ class CAdminController
      * @var \Slim\Slim
      */
     private $context;
-
-    //Содержит объект класса ConfigManager
-    public $config;
+    protected static $instance;
 
     //Содержит GET переменные
     public $params;
@@ -23,37 +21,29 @@ class CAdminController
 
     private $login;
     private $password;
-    private $users;
 
     function __construct(\Slim\Slim $context){
-
         $this->context = $context;
-        
         //проверка авторизации
-        $this->users = new AdminUserManager();
         if ($this->getContext()->request()->isPost()) {
-            if (!empty($this->getContext()->request()->post('login')) && !empty($this->getContext()->request()->post('password'))) {
-                $this->login = $this->string_valid($this->getContext()->request()->post('login'));
-                $this->password = $this->string_valid($this->getContext()->request()->post('password'));
+            if (!empty($this->getContext()->request()->post('auth_login')) && !empty($this->getContext()->request()->post('auth_password'))) {
+                $this->login = $this->string_valid($this->getContext()->request()->post('auth_login'));
+                $this->password = $this->string_valid($this->getContext()->request()->post('auth_password'));
                 $this->action_auth();
             }
         }
-        
         $this->action_check();
         
         //Извлекаем текущие настройки
-        $this->config = new AdminConfigManager();
-        $site_settings = $this->config->selectConfig();
+        $site_settings = MAdminConfig::selectConfig();
 
         //Формируем список настроек
         $this->site_config = array();
         foreach ($site_settings as $site_setting) {
             $this->site_config[$site_setting['config']] = $site_setting['value'];
         }
-        
     }
-
-    protected static $instance;
+    
     public static function getInstance(\Slim\Slim $app)
     {
         if (is_null(self::$instance[get_called_class()])) {
@@ -65,18 +55,11 @@ class CAdminController
     protected function getContext() {
         return $this->context;
     }
-
-
+    
     //проверка сессии
     function action_check(){
-        if(isset($_SESSION['auth'])){
-            if ($_SESSION['auth'] != 'auth') {
-                $this->action_login();
-                exit();
-            }
-        }else{
+        if(empty($_SESSION['auth']) || $_SESSION['auth'] != 'auth'){
             $this->action_login();
-            exit();
         }
     }
 
@@ -85,19 +68,28 @@ class CAdminController
         ob_start();
         include ROOT_DIR."/templates/admin/login.page.tpl";
         echo ob_get_clean();
+        exit;
     }
 
     //авторизация 
     function action_auth(){
-        $result = $this->users->authUser($this->login, $this->password);
-        if($result){
-            header("Location: /admin/home");
-            exit();
-        }else{
-            $_SESSION['error'] = 'Ошибка авторизации';
-            header("Location: /admin/login");
-            exit();
+        $result = MAdminUser::getUserByLogin($this->login);
+        
+        if (!empty($result)){
+            if(password_verify($this->password, $result['password'])){
+                session_regenerate_id();
+                $_SESSION['auth'] = 'auth';
+                $_SESSION['role'] = $result['role'];
+                $_SESSION['user_id'] =  $result['id'];
+                
+                header("Location: /admin/home");
+                exit();
+            }
         }
+    
+        $_SESSION['error'] = 'Ошибка авторизации';
+        header("Location: /admin/login");
+        exit();
     }
 
     //выход
@@ -114,65 +106,58 @@ class CAdminController
     public function action_menu(){
         
         //Иерархия меню
-        $main_menu = array (
+        return [
 
-                array('menu_href' => '/admin/home', 'menu_title' => 'Главная', 'icon' => 'fa-home', 'role' => 'user'),
+            ['menu_href' => '/admin/home', 'menu_title' => 'Главная', 'icon' => 'fa-home', 'role' => 'user'],
 
-                array( 'group' => 'Страницы',  'icon' => 'fa-file-text-o','role' => 'user',
-                        'childs' => array (
-                            array('menu_href' => '/admin/pages/index', 'menu_title' => 'Список', 'icon' => 'fa-th-list','role' => 'user'),
-                            array('menu_href' => '/admin/pages/addpage', 'menu_title' => 'Добавить', 'icon' => 'fa-plus-circle','role' => 'user')
-                        )
-                ),
+            [ 'group' => 'Страницы',  'icon' => 'fa-file-text-o','role' => 'user',
+                'childs' => [
+                    ['menu_href' => '/admin/pages/index', 'menu_title' => 'Список', 'icon' => 'fa-th-list','role' => 'user'],
+                    ['menu_href' => '/admin/pages/addpage', 'menu_title' => 'Добавить', 'icon' => 'fa-plus-circle','role' => 'user']
+                ]
+            ],
 
-                array( 'group' => 'Записи',  'icon' => 'fa-list-alt','role' => 'user',
-                        'childs' => array (
-                            array('menu_href' => '/admin/category/index', 'menu_title' => 'Список категорий', 'icon' => 'fa-list-ol','role' => 'user'),
-                            array('menu_href' => '/admin/category/addcategory', 'menu_title' => 'Добавить категорию', 'icon' => 'fa-plus-circle','role' => 'user'),
-                            array('menu_href' => '/admin/category/addrecord', 'menu_title' => 'Добавить запись', 'icon' => 'fa-plus-square','role' => 'user')
-                        )
-                ),
+            [ 'group' => 'Записи',  'icon' => 'fa-list-alt','role' => 'user',
+                'childs' => [
+                    ['menu_href' => '/admin/category/index', 'menu_title' => 'Список категорий', 'icon' => 'fa-list-ol','role' => 'user'],
+                    ['menu_href' => '/admin/category/addcategory', 'menu_title' => 'Добавить категорию', 'icon' => 'fa-plus-circle','role' => 'user'],
+                    ['menu_href' => '/admin/category/addrecord', 'menu_title' => 'Добавить запись', 'icon' => 'fa-plus-square','role' => 'user']
+                ]
+            ],
 
-                array( 'group' => 'Галерея', 'icon' => 'fa-camera-retro','role' => 'user',
-                        'childs' => array (
-                            array('menu_href' => '/admin/gallerylist/index', 'menu_title' => 'Список разделов', 'icon' => 'fa-th','role' => 'user'),
-                            array('menu_href' => '/admin/gallerylist/addgallerylist', 'menu_title' => 'Добавить раздел', 'icon' => 'fa-list-alt','role' => 'user'),
-                            array('menu_href' => '/admin/gallerylist/addgallery', 'menu_title' => 'Добавить альбом', 'icon' => 'fa-photo','role' => 'user'),
-                            array('menu_href' => '/admin/gallerylist/addvideo', 'menu_title' => 'Добавить видео', 'icon' => 'fa-video-camera','role' => 'user')
-                        )
-                ),
+            [ 'group' => 'Галерея', 'icon' => 'fa-camera-retro','role' => 'user',
+                'childs' => [
+                    ['menu_href' => '/admin/gallerylist/index', 'menu_title' => 'Список разделов', 'icon' => 'fa-th','role' => 'user'],
+                    ['menu_href' => '/admin/gallerylist/addgallerylist', 'menu_title' => 'Добавить раздел', 'icon' => 'fa-list-alt','role' => 'user'],
+                    ['menu_href' => '/admin/gallerylist/addgallery', 'menu_title' => 'Добавить альбом', 'icon' => 'fa-photo','role' => 'user'],
+                    ['menu_href' => '/admin/gallerylist/addvideo', 'menu_title' => 'Добавить видео', 'icon' => 'fa-video-camera','role' => 'user']
+                ]
+            ],
 
-                array('menu_href' => '/admin/menu/index', 'menu_title' => 'Меню', 'icon' => 'fa-tasks','role' => 'user'),
+            ['menu_href' => '/admin/menu/index', 'menu_title' => 'Меню', 'icon' => 'fa-tasks','role' => 'user'],
 
-                array( 'group' => 'Настройки', 'icon' => 'fa-gears','role' => 'user',
-                        'childs' => array (
-                            array('menu_href' => '/admin/config/site', 'menu_title' => 'Сайт', 'icon' => 'fa-globe','role' => 'user'),
-                            array('menu_href' => '/admin/config/home', 'menu_title' => 'Главная стр.', 'icon' => 'fa-home','role' => 'user'),
-                            array('menu_href' => '/admin/config/contacts', 'menu_title' => 'Стр. контакты', 'icon' => 'fa-envelope-o','role' => 'user'),
-                            array('menu_href' => '/admin/config/sms', 'menu_title' => 'SMS сообщения', 'icon' => 'fa-mobile','role' => 'admin'),
-                            array('menu_href' => '/admin/config/social', 'menu_title' => 'Соц. кнопки', 'icon' => 'fa-thumbs-o-up','role' => 'admin'),
-                            array('menu_href' => '/admin/config/analytics', 'menu_title' => 'Код. аналит.', 'icon' => 'fa-dashboard','role' => 'admin'),
-                            array('menu_href' => '/admin/config/admin', 'menu_title' => 'Админ. интерфейс', 'icon' => 'fa-home','role' => 'admin')
-                        )
-                )
+            [ 'group' => 'Настройки', 'icon' => 'fa-gears','role' => 'user',
+                'childs' => [
+                    ['menu_href' => '/admin/config/site', 'menu_title' => 'Сайт', 'icon' => 'fa-globe','role' => 'user'],
+                    ['menu_href' => '/admin/config/home', 'menu_title' => 'Главная стр.', 'icon' => 'fa-home','role' => 'user'],
+                    ['menu_href' => '/admin/config/contacts', 'menu_title' => 'Стр. контакты', 'icon' => 'fa-envelope-o','role' => 'user'],
+                    ['menu_href' => '/admin/config/sms', 'menu_title' => 'SMS сообщения', 'icon' => 'fa-mobile','role' => 'admin'],
+                    ['menu_href' => '/admin/config/social', 'menu_title' => 'Соц. кнопки', 'icon' => 'fa-thumbs-o-up','role' => 'admin'],
+                    ['menu_href' => '/admin/config/analytics', 'menu_title' => 'Код. аналит.', 'icon' => 'fa-dashboard','role' => 'admin'],
+                    ['menu_href' => '/admin/config/admin', 'menu_title' => 'Админ. интерфейс', 'icon' => 'fa-home','role' => 'admin']
+                ]
+            ]
 
-            );
-
-        return $main_menu;
+        ];
 
     }
 
     //вывод сообщений
     protected function lastMessages(){
-
-        $messages = new AdminMessagesManager();
-        $unread_messages = $messages->selectLast3Unread();
-
-        $last_messages = array();
-
+        $unread_messages = MAdminMessages::selectLast3Unread();
+        $last_messages = [];
         $c = 0;
         foreach ($unread_messages as $unread_message) {
-
             $last_messages[$c]['name'] = $unread_message['name'];
             $last_messages[$c]['phone'] = $unread_message['phone'];
             $last_messages[$c]['text'] = $unread_message['text'];
@@ -180,9 +165,7 @@ class CAdminController
             $last_messages[$c]['datetime'] = $unread_message['datetime'];
             $last_messages[$c]['id'] = $unread_message['id'];
             $c++;
-            
         }
-
         return $last_messages;
     }
 

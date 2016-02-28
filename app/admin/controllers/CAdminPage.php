@@ -1,14 +1,11 @@
 <?php
 namespace Cms\Admin\Controllers;
 
-use Cms\Admin\Models\AdminPageManager;
+use Cms\Admin\Models\MAdminPage;
 
 //Контроллер страниц
 class CAdminPage extends CAdminController
 {
-
-    public $pages;
-
     public $id;
     public $url;
     public $title;
@@ -16,89 +13,63 @@ class CAdminPage extends CAdminController
     public $seo_title;
     public $seo_descr;
     public $seo_keywords;
-
-
+    
     function __construct(\Slim\Slim $context){
-
         parent::__construct($context);
-
-        $this->pages = new AdminPageManager();
-
         if ($this->getContext()->request()->isPost()){
-            
             if (!empty($this->getContext()->request()->post('id'))){
                 $this->id = abs((int)$this->getContext()->request()->post('id'));
             }
-
             if (!empty($this->getContext()->request()->post('url'))){
                 $this->url = $this->string_valid($this->getContext()->request()->post('url'));
             }
-            
             if (!empty($this->getContext()->request()->post('title'))){
                 $this->title = $this->string_valid($this->getContext()->request()->post('title'));
             }
-            
             if (!empty($this->getContext()->request()->post('text'))){
                 $this->text = trim($this->getContext()->request()->post('text'));
             }
-            
             if (!empty($this->getContext()->request()->post('seo_title'))){
                 $this->seo_title = $this->string_valid($this->getContext()->request()->post('seo_title'));
             }
-
             if (!empty($this->getContext()->request()->post('seo_descr'))){
-                $this->seo_descr = $this->string_valid($this->getContext()->request()->post('seo_title'));
+                $this->seo_descr = $this->string_valid($this->getContext()->request()->post('seo_descr'));
             }
-
             if (!empty($this->getContext()->request()->post('seo_keywords'))){
-                $this->seo_keywords = $this->string_valid($this->getContext()->request()->post('seo_title'));
+                $this->seo_keywords = $this->string_valid($this->getContext()->request()->post('seo_keywords'));
             }
-
         }
-
     }
 
-	//Добавление страницы
+	  //Добавление страницы
     public function action_add(){
-        
-        $result = $this->pages->addPage($this->url, $this->title, $this->text, $this->seo_title, $this->seo_descr, $this->seo_keywords);
-
-        if ($result['id'] >= 0) {
-
-            header('Location: /admin/pages/page/' . $result['id']);
+        $id = MAdminPage::addPage($this->url, $this->title, $this->text, $this->seo_title, $this->seo_descr, $this->seo_keywords);
+        if ($id) {
+            header('Location: /admin/pages/page/' . $id);
             exit();
-
-        }else{
-
-            $_SESSION['error'] = $result;
-            header('Location: /admin/pages/page');
+        } else {
+            $_SESSION['error'] = 'Ошибка добавления';
+            header('Location: /admin/pages/index');
             exit();
-
         }
-
     }
 
-	//Обновление страницы
+	  //Обновление страницы
     public function action_update(){
-
-        $result = $this->pages->updatePage($this->id, $this->url, $this->title, $this->text, $this->seo_title, $this->seo_descr, $this->seo_keywords);
-
-        if ($result == true) {
+        $result = MAdminPage::updatePage($this->id, $this->url, $this->title, $this->text, $this->seo_title, $this->seo_descr, $this->seo_keywords);
+        if ($result) {
             header('Location: /admin/pages/page/' . $this->id);
             exit();
-        }else{
-            $_SESSION['error'] = $result;
+        } else {
+            $_SESSION['error'] = 'Ошибка обновления';
             header('Location: /admin/pages/page/'. $this->id);
             exit();
         }
-
     }
 
-	//Вывод шаблона списка страниц
+	  //Вывод шаблона списка страниц
     public function action_index(){
-        
-        $items = $this->pages->selectAllPages();
-
+        $items = MAdminPage::selectAllPages();
         //Настройки
         $title = 'Страницы';
         $header = 'Страницы';
@@ -131,9 +102,8 @@ class CAdminPage extends CAdminController
         $smarty->clearAllAssign();
     }
 
-	//Вывод шаблона добавления страницы
+	  //Вывод шаблона добавления страницы
     public function action_addpage(){
-
         //Настройки
         $title = 'Страница';
         $header = 'Добавление страницы';
@@ -147,6 +117,7 @@ class CAdminPage extends CAdminController
                 <script type="text/javascript" src="/dist/config/tinymce/config.js"></script>
                 <script type="text/javascript" src="/dist/config/liTranslit/page_add.js"></script>
                 <script type="text/javascript" src="/dist/config/validate/page_add.js"></script>
+               
             ';
         $css =
             '
@@ -167,14 +138,11 @@ class CAdminPage extends CAdminController
 
         //Очистка переменных
         $smarty->clearAllAssign();
-
     }
 
-	//Вывод шаблона страницы
+	  //Вывод шаблона страницы
     public function action_page(){
-
-        $item = $this->pages->selectPage($this->params);
-
+        $item = MAdminPage::selectPage($this->params);
         //Настройки
         $title = 'Страница';
         $header = 'Редактирование страницы';
@@ -210,37 +178,31 @@ class CAdminPage extends CAdminController
 
         //Очистка переменных
         $smarty->clearAllAssign();
-
     }
 
-	//Проверка url страницы на уникальность
+	  //Проверка url страницы на уникальность
     public function action_unic(){
-
-        exit($this->pages->unicPage($this->url, '0'));
-
+        echo MAdminPage::unicPage($this->url, '0');
+        exit();
     }
 
-	//Проверка url страницы на уникальность при обновлении
+	  //Проверка url страницы на уникальность при обновлении
     public function action_unicexist(){
-
-        exit($this->pages->unicPage($this->url, $this->id));
-
+        echo MAdminPage::unicPage($this->url, $this->id);
+        exit();
     }
 
-	//Удаление страницы
+	  //Удаление страницы
     public function action_del(){
-
-        $result = $this->pages->deletePage($this->params);
-
-        if ($result == true) {
+        $result = MAdminPage::deletePage($this->params);
+        if ($result) {
             header('Location: /admin/pages');
             exit();
-        }else{
-            $_SESSION['error'] = $result;
+        } else {
+            $_SESSION['error'] = 'Ошибка удаления';
             header('Location: /admin/pages');
             exit();
         }
-
     }
 
 }

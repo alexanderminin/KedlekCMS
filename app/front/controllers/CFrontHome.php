@@ -1,25 +1,21 @@
 <?php
 namespace Cms\Front\Controllers;
 
-use Cms\Front\Models\FrontPageManager;
+use Cms\Front\Models\MFrontPage;
 
 //Контроллер главной страницы
 class CFrontHome extends CFrontController
 {
-
-
+    
 	//Вывод шаблона главной страницы
     public function action_index(){
 
         //Инициализация Smarty
         $smarty = $this->SmartyInit();
-
-
+        
         //Получаем данные главной страницы
         if($this->site_config['home_url'] != ''){
-
-            $page = new FrontPageManager();
-            $item = $page->selectPage($this->site_config['home_url']);
+            $item = MFrontPage::selectPage($this->site_config['home_url']);
 
             //Общие настройки страницы
             $smarty->assign('seo_title',$item['seo_title']);
@@ -30,9 +26,7 @@ class CFrontHome extends CFrontController
             //Контент страницы
             $smarty->assign('text',$item['text']);
             $smarty->assign('home_html',$this->site_config['home_html']);
-
-        }else{
-
+        } else {
             //Общие настройки страницы
             $smarty->assign('seo_title',$this->site_config['site_title']);
             $smarty->assign('seo_descr',$this->site_config['site_title']);
@@ -42,7 +36,6 @@ class CFrontHome extends CFrontController
             //Контент страницы
             $smarty->assign('text','Главная страница не задана');
             $smarty->assign('home_html',$this->site_config['home_html']);
-
         }
 
         //Вывод шаблона
@@ -50,13 +43,10 @@ class CFrontHome extends CFrontController
 
         //Очистка переменных
         $smarty->clearAllAssign();
-
-
     }
 
-	//Вывод шаблона 404 страницы
+	  //Вывод шаблона 404 страницы
     public function action_404(){
-
         //Инициализация Smarty
         $smarty = $this->SmartyInit();
 
@@ -71,7 +61,5 @@ class CFrontHome extends CFrontController
 
         //Очистка переменных
         $smarty->clearAllAssign();
-
     }
-
 }

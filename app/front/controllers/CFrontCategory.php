@@ -1,7 +1,7 @@
 <?php
 namespace Cms\Front\Controllers;
 
-use Cms\Front\Models\FrontCategoryManager;
+use Cms\Front\Models\MFrontCategory;
 
 //Контроллер страниц
 class CFrontCategory extends CFrontController
@@ -9,11 +9,9 @@ class CFrontCategory extends CFrontController
 
 	//Вывод шаблона категорий
     public function action_index(){
-
         //Получаем данные категории
-        $class = new FrontCategoryManager();
-        $category = $class->selectCategory($this->params[0]);
-        $records = $class->selectRecords($category['id']);
+        $category = MFrontCategory::selectCategory($this->params[0]);
+        $records = MFrontCategory::selectRecords($category['id']);
 
         //Инициализация Smarty
         $smarty = $this->SmartyInit();
@@ -113,8 +111,5 @@ class CFrontCategory extends CFrontController
 
         //Очистка переменных
         $smarty->clearAllAssign();
-
     }
-
-
 }

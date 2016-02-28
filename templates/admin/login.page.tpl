@@ -42,10 +42,10 @@
                         <form role="form" action='/admin/login/auth' method='post'>
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Логин" name="login" type="login" autofocus>
+                                    <input class="form-control" placeholder="Логин" name="auth_login" type="login" autofocus>
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Пароль" name="password" type="password" value="">
+                                    <input class="form-control" placeholder="Пароль" name="auth_password" type="password" value="">
                                 </div>
                                 <button type="submit" class="btn btn-lg btn-success btn-block">Войти</button>
                             </fieldset>

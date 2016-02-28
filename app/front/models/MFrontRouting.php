@@ -1,104 +1,54 @@
 <?php
 namespace Cms\Front\Models;
 
-use Cms\ConnectionDB;
+use Illuminate\Database\Capsule\Manager as DB;
 
 //Управление Роутингом клиент. сайта
-class FrontRoutingManager
+class MFrontRouting
 {
-
-    private $db;
-
-    function __construct(){
-        $db = ConnectionDB::getInstance(); 
-        $this->db = $db->db;
-    }
-
     //Вывод категории
-    function search($params){
-
-        $result = $this->db->kedlek_category()->where("url = ?", $params[0]);
-
-        if (count($result) > 0) {
-
+    public static function search($params){
+        $result = DB::table('kedlek_category')->where('url', $params[0])->get();
+        if ($result) {
             if (count($params) > 1) {
-
                 if(strlen(utf8_decode($params[1])) <= 4 && substr($params[1], 0) > 0){
-
                     return array('CFrontCategory', 'action_index');
-
                 } else {
-
-                    $result = $this->db->kedlek_category_records()->where("url = ?", $params[1]);
-
+                    $result = DB::table('kedlek_category_records')->where('url', $params[1])->get();
                     if (count($result) > 0) {
-
                         return array('CFrontRecord', 'action_index');
-
                     } else {
-
                         return null;
-
                     }
-
                 }
-
             } else {
-
                 return array('CFrontCategory', 'action_index');
-
             }
-
         }
 
-        $result = $this->db->kedlek_gallery_list()->where("url = ?", $params[0]);
-
-        if (count($result) > 0) {
-
+        $result = DB::table('kedlek_gallery_list')->where('url', $params[0])->get();
+        if ($result) {
             if (count($params) > 1) {
-
                 if(strlen(utf8_decode($params[1])) <= 4 && substr($params[1], 0) > 0){
-
                     return array('CFrontGallery', 'action_index');
-
                 } else {
-
-                    $result = $this->db->kedlek_gallery()->where("url = ?", $params[1]);
-
+                    $result = DB::table('kedlek_gallery')->where('url', $params[1])->get();
                     if (count($result) > 0) {
-
                         return array('CFrontGallery', 'action_view');
-
                     } else {
-
                         return null;
-
                     }
-
                 }
-
             } else {
-
                 return array('CFrontGallery', 'action_index');
-
             }
-
         }
 
-
-        $result = $this->db->kedlek_pages()->where("url = ?", $params[0]);
-
-        if (count($result) > 0) {
-
-                return array('CFrontPage', 'action_index');
-
+        $result = DB::table('kedlek_pages')->where('url', $params[0])->get();
+        if ($result) {
+            return array('CFrontPage', 'action_index');
         } else {
-
             return null;
-
         }
-
-      
     }
-
 }

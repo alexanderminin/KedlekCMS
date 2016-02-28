@@ -1,37 +1,26 @@
 <?php
 namespace Cms\Admin\Controllers;
 
-use Cms\Admin\Models\AdminMessagesManager;
+use Cms\Admin\Models\MAdminMessages;
 
 //Контроллер сообщений
 class CAdminMessages extends CAdminController
 {
-
-    public $messages;
     public $id;
 
     function __construct(\Slim\Slim $context){
-
         parent::__construct($context);
-
-        $this->messages = new AdminMessagesManager();
-
         if ($this->getContext()->request()->isPost()){
-
             if (!empty($this->getContext()->request()->post('id'))){
                 $this->id = abs((int)$this->getContext()->request()->post('id'));
             }
-
         }
-
     }
 
-	//Помечаем сообщение как прочитанное
+	  //Помечаем сообщение как прочитанное
     public function action_read(){
-
-        $result = $this->messages->markIsRead($this->params);
-
-        if ($result == true) {
+        $result = MAdminMessages::markIsRead($this->params);
+        if ($result) {
             header('Location: /admin/messages');
             exit();
         }else{
@@ -39,14 +28,11 @@ class CAdminMessages extends CAdminController
             header('Location: /admin/messages');
             exit();
         }
-
     }
 
-	//Вывод шаблона списка сообщений
+	  //Вывод шаблона списка сообщений
     public function action_index(){
-        
-        $items = $this->messages->selectAll();
-
+        $items = MAdminMessages::selectAll();
         //Настройки
         $title = 'Сообщения с сайта';
         $header = 'Сообщения с сайта';
@@ -85,15 +71,12 @@ class CAdminMessages extends CAdminController
 
         //Очистка переменных
         $smarty->clearAllAssign();
-
     }
 
-	//Удаление сообщения
+	  //Удаление сообщения
     public function action_del(){
-
-        $result = $this->messages->deleteMessage($this->params);
-
-        if ($result == true) {
+        $result = MAdminMessages::deleteMessage($this->params);
+        if ($result) {
             header('Location: /admin/messages');
             exit();
         }else{
@@ -101,7 +84,6 @@ class CAdminMessages extends CAdminController
             header('Location: /admin/messages');
             exit();
         }
-
     }
 
 }

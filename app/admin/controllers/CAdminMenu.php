@@ -1,10 +1,10 @@
 <?php
 namespace Cms\Admin\Controllers;
 
-use Cms\Admin\Models\AdminMenuManager;
-use Cms\Admin\Models\AdminPageManager;
-use Cms\Admin\Models\AdminCategoryManager;
-use Cms\Admin\Models\AdminGalleryManager;
+use Cms\Admin\Models\MAdminMenu;
+use Cms\Admin\Models\MAdminPage;
+use Cms\Admin\Models\MAdminCategory;
+use Cms\Admin\Models\MAdminGallery;
 
 //Контроллер меню
 class CAdminMenu extends CAdminController
@@ -13,115 +13,73 @@ class CAdminMenu extends CAdminController
     public $id;
     public $title;
     public $target;
-    public $menu;
     public $data;
 
     function __construct(\Slim\Slim $context){
-
         parent::__construct($context);
-
-        $this->menu = new AdminMenuManager();
-
         if ($this->getContext()->request()->isPost()){
-
-
             if (!empty($this->getContext()->request()->post('id'))){
                 $this->id = abs((int)$this->getContext()->request()->post('id'));
             }
-
             if (!empty($this->getContext()->request()->post('title'))){
                 $this->title = $this->string_valid($this->getContext()->request()->post('title'));
             }
-
             if (!empty($this->getContext()->request()->post('target'))){
                 $this->target = $this->string_valid($this->getContext()->request()->post('target'));
             }
-
             if (!empty($this->getContext()->request()->post('data'))){
                 $this->data = $this->string_valid($this->getContext()->request()->post('data'));
             }
-
         }
-
     }
-
-
-
-	//Вывод списка доступных страниц
+    
+	  //Вывод списка доступных страниц
     public function target_list(){
-
-        $pages = new AdminPageManager();
-        $pages = $pages->selectPageMenu();
-        
+        $pages = MAdminPage::selectAllPages();
         $target = '<optgroup label="Страницы">';
-
         foreach ($pages as $page) {
-
             $target .= '<option value="/' . $page['url'] . '">' . $page['title'] . '</option>';
-
         }
-
         $target .= '</optgroup>';
         $target .= '<optgroup label="Категории">';
-
-        $category = new AdminCategoryManager();
-        $category = $category->selectCategoryMenu();
+        
+        $category = MAdminCategory::selectCategoryMenu();
 
         foreach ($category as $cat) {
-
             $target .= '<option value="/' . $cat['url'] . '">' . $cat['title'] . '</option>';
-
         }
 
         $target .= '</optgroup>';
         $target .= '<optgroup label="Галереи">';
 
-        $gallery_list = new AdminGalleryManager();
-        $gallery_list = $gallery_list->selectGalleryListMenu();
+        $gallery_list = MAdminGallery::selectGalleryListMenu();
 
         foreach ($gallery_list as $gallery) {
-
             $target .= '<option value="/' . $gallery['url'] . '">' . $gallery['title'] . '</option>';
-
-
         }
-
         $target .= '</optgroup>';
 
         return $target;
-
     }
 
-	//Добавление пункта меню
+	  //Добавление пункта меню
     public function action_add(){
-
-        
-        $result = $this->menu->addMenu($this->title, $this->target);
-
-        if ($result['id'] >= 0) {
-
+        $result = MAdminMenu::addMenu($this->title, $this->target);
+        if ($result) {
             header('Location: /admin/menu');
-            exit(); 
-
-        }else{
-
-            $_SESSION['error'] = $result;
-
+            exit();
+        } else {
+            $_SESSION['error'] = 'Ошибка добавления';
             header('Location: /admin/menu');
-
             exit();
         }
-
     }
 
-	//Вывод шаблона меню
+	  //Вывод шаблона меню
     public function action_index(){
-        
-        $active_menu = $this->menu->selectActiveMenu();
-        $menu = $this->menu->selectMenu();
-
+        $active_menu = MAdminMenu::selectActiveMenu();
+        $menu = MAdminMenu::selectMenu();
         $targets = $this->target_list();
-
         //сортируем массив по ключам
         function array_sort($items){
             $menu_arr = array();
@@ -132,28 +90,20 @@ class CAdminMenu extends CAdminController
                 $menu_arr[$item['id']]['ord'] = $item['ord'];
                 $menu_arr[$item['id']]['target'] = $item['target'];
                 $menu_arr[$item['id']]['active'] = $item['active'];
-
             }
-
             return $menu_arr;
         }
 
         //создание древовидного массива
         function build_tree($data){
-            
             $tree = array();
-            
             foreach($data as $id => &$row){
-            
                 if($row['parent_id'] == '0'){
-                    
                     $tree[$id] = &$row;
-                }
-                else{
+                } else {
                     $data[$row['parent_id']]['childs'][$id] = &$row;
                 }
             }
-            
             return $tree;
         }
 
@@ -201,26 +151,22 @@ class CAdminMenu extends CAdminController
 
     }
 
-	//Удаление пункта меню
+	  //Удаление пункта меню
     public function action_del(){
-
-        $result = $this->menu->deleteMenu($this->params);
-
+        $result = MAdminMenu::deleteMenu($this->params);
         if ($result == true) {
             header('Location: /admin/menu');
             exit();
-        }else{
-            $_SESSION['error'] = $result;
+        } else {
+            $_SESSION['error'] = 'Ошибка удаления';
             header('Location: /admin/menu');
             exit();
         }
-
     }
 
-	//Преобразование массива в древовидный
+	  //Преобразование массива в древовидный
     public function parseJsonArray($jsonArray, $parentID = 0) {
-
-      $return = array();
+      $return = [];
       foreach ($jsonArray as $subArray) {
         $returnSubSubArray = array();
         if (isset($subArray['children'])) {
@@ -230,44 +176,30 @@ class CAdminMenu extends CAdminController
         $return = array_merge($return, $returnSubSubArray);
       }
       return $return;
-
     }
 
-	//Обновление активных пунктов меню
+	  //Обновление активных пунктов меню
     public function action_updateactive(){
-
         $this->data = json_decode($this->data, true);
-
         $items = $this->parseJsonArray($this->data);
-
         $c = 1;
-
         foreach ($items as $item) {
-            $this->menu->updateMenu($item['id'], $item['parent_id'], $c, '2');
+            MAdminMenu::updateMenu($item['id'], $item['parent_id'], $c, '2');
             $c++;
         }
-
         echo 'Активное меню обновлено';
-
         exit();
-
     }
 
-	//Обновление пунктов меню
+	  //Обновление пунктов меню
     public function action_update(){
-
         $this->data = json_decode($this->data, true);
-
         $items = $this->parseJsonArray($this->data);
-
         foreach ($items as $item) {
-            $this->menu->updateMenu($item['id'], '0', '0', '1');
+            MAdminMenu::updateMenu($item['id'], '0', '0', '1');
         }
-
         echo 'Меню обновлено';
-
         exit();
-
     }
 
 }

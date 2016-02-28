@@ -1,19 +1,17 @@
 <?php
 namespace Cms\Front\Controllers;
 
-use Cms\Front\Models\FrontGalleryManager;
+use Cms\Front\Models\MFrontGallery;
 
 //Контроллер галееи
 class CFrontGallery extends CFrontController
 {
 
-	//Вывод шаблона списка галереии
+	  //Вывод шаблона списка галереии
     public function action_index(){
-
         //Получаем данные галереи
-        $class = new FrontGalleryManager();
-        $gallery_list = $class->selectGalleryList($this->params[0]);
-        $items = $class->selectGalleryAll($gallery_list['id']);
+        $gallery_list = MFrontGallery::selectGalleryList($this->params[0]);
+        $items = MFrontGallery::selectGalleryAll($gallery_list['id']);
 
         //Инициализация Smarty
         $smarty = $this->SmartyInit();
@@ -113,16 +111,13 @@ class CFrontGallery extends CFrontController
 
         //Очистка переменных
         $smarty->clearAllAssign();
-
     }
 
-	//Вывод шаблона галереи
+	  //Вывод шаблона галереи
     public function action_view(){
-
         //Получаем данные галереи
-        $class = new FrontGalleryManager();
-        $item = $class->selectGallery($this->params[1]);
-        $items = $class->selectGalleryItems($item['id']);
+        $item = MFrontGallery::selectGallery($this->params[1]);
+        $items = MFrontGallery::selectGalleryItems($item['id']);
 
         //Инициализация Smarty
         $smarty = $this->SmartyInit();
@@ -144,7 +139,5 @@ class CFrontGallery extends CFrontController
 
         //Очистка переменных
         $smarty->clearAllAssign();
-
     }
-
 }

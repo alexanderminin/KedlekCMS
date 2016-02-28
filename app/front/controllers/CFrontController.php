@@ -1,7 +1,7 @@
 <?php
 namespace Cms\Front\Controllers;
 
-use Cms\Front\Models\FrontConfigManager;
+use Cms\Front\Models\MFrontConfig;
 
 class CFrontController
 {
@@ -9,9 +9,7 @@ class CFrontController
      * @var \Slim\Slim
      */
     private $context;
-
-    //Содержит объект класса ConfigManager
-    public $config;
+    protected static $instance;
 
     //Содержит GET переменные
     public $params;
@@ -20,23 +18,17 @@ class CFrontController
     public $site_config;
 
     function __construct(\Slim\Slim $context){
-
+        $this->context = $context;
         //Извлекаем текущие настройки
-        $this->config = new FrontConfigManager();
-        $site_settings = $this->config->selectConfig();
+        $site_settings = MFrontConfig::selectConfig();
 
         //Формируем список настроек
         $this->site_config = array();
         foreach ($site_settings as $site_setting) {
             $this->site_config[$site_setting['config']] = $site_setting['value'];
         }
-        
-        $this->context = $context;
-
     }
-
-
-    protected static $instance;
+    
     public static function getInstance(\Slim\Slim $app)
     {
         if (is_null(self::$instance[get_called_class()])) {
@@ -53,7 +45,7 @@ class CFrontController
     public function action_menu(){
         
         //Делаем выборку пунктов меню в массив
-        $menu = $this->config->selectMenu();
+        $menu = MFrontConfig::selectMenu();
 
         //Сортируем массив меню по ключам
         function array_sort_it($items){
@@ -65,44 +57,31 @@ class CFrontController
                 $menu_arr[$item['id']]['ord'] = $item['ord'];
                 $menu_arr[$item['id']]['target'] = $item['target'];
                 $menu_arr[$item['id']]['active'] = $item['active'];
-
             }
-
             return $menu_arr;
         }
 
         //Создаем древовидный массив меню
         function build_tree($data){
-            
-            $tree = array();
-            
+            $tree = [];
             foreach($data as $id => &$row){
-            
                 if($row['parent_id'] == '0'){
-                    
                     $tree[$id] = &$row;
-                }
-                else{
+                } else {
                     $data[$row['parent_id']]['childs'][$id] = &$row;
                 }
             }
-            
             return $tree;
         }
-
         //вывод результата
         $menu = array_sort_it($menu);
         $menu = build_tree($menu);
-
         return $menu;
-
     }
 
     //Инициализация Smarty
     protected function SmartyInit(){
-
         $smarty = new \Smarty();
-
         //Определим основные директории
         $smarty->setConfigDir('lib/configs');
         //$smarty->setTemplateDir('templates/front');
@@ -137,7 +116,5 @@ class CFrontController
         $smarty->assign('site_settings',$this->site_config);
 
         return $smarty;
-
     }
-    
 }

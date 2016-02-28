@@ -1,19 +1,15 @@
 <?php
 namespace Cms\Admin\Controllers;
 
-use Cms\Admin\Models\AdminMessagesManager;
+use Cms\Admin\Models\MAdminMessages;
 
 //Контроллер главной страницы
 class CAdminHome extends CAdminController
 {
 
-	//Вывод шаблона главной страницы
+	  //Вывод шаблона главной страницы
     public function action_index(){
-
-        $messages = new AdminMessagesManager();
-
-        $items = $messages->selectNew();
-
+        $items = MAdminMessages::selectNew();
         //Настройки
         $title = 'Главная';
         $header = 'Главная';
@@ -52,7 +48,5 @@ class CAdminHome extends CAdminController
 
         //Очистка переменных
         $smarty->clearAllAssign();
-
     }
-
 }

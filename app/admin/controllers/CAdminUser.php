@@ -1,13 +1,11 @@
 <?php
 namespace Cms\Admin\Controllers;
 
-use Cms\Admin\Models\AdminUserManager;
+use Cms\Admin\Models\MAdminUser;
 
 //Контроллер пользователей
 class CAdminUser extends CAdminController
 {
-
-    public $users;
     public $id;
     public $login;
     public $new_login;
@@ -19,79 +17,62 @@ class CAdminUser extends CAdminController
     public $new_pass;
 
     function __construct(\Slim\Slim $context){
-
         parent::__construct($context);
-
-        $this->users = new AdminUserManager();
-
         if ($this->getContext()->request()->isPost()){
-
             if (!empty($this->getContext()->request()->post('id'))){
                 $this->id = abs((int)$this->getContext()->request()->post('id'));
             }
-
             if (!empty($this->getContext()->request()->post('login'))){
                 $this->login = $this->string_valid($this->getContext()->request()->post('login'));
             }
-
             if (!empty($this->getContext()->request()->post('new_login'))){
                 $this->new_login = $this->string_valid($this->getContext()->request()->post('new_login'));
             }
-
             if (!empty($this->getContext()->request()->post('password'))){
                 $this->password = $this->string_valid($this->getContext()->request()->post('password'));
             }
-
             if (!empty($this->getContext()->request()->post('fio'))){
                 $this->fio = $this->string_valid($this->getContext()->request()->post('fio'));
             }
-
             if (!empty($this->getContext()->request()->post('role'))){
                 $this->role = $this->string_valid($this->getContext()->request()->post('role'));
             }
-
             if (!empty($this->getContext()->request()->post('mail'))){
                 $this->mail = $this->string_valid($this->getContext()->request()->post('mail'));
             }
-
             if (!empty($this->getContext()->request()->post('old_pass'))){
                 $this->old_pass = $this->string_valid($this->getContext()->request()->post('old_pass'));
             }
-
             if (!empty($this->getContext()->request()->post('new_pass'))){
                 $this->new_pass = $this->string_valid($this->getContext()->request()->post('new_pass'));
             }
-
         }
-
     }
 
-	//Добавление пользователя
+    //Добавление пользователя
     public function action_add(){
-
-        $result = $this->users->addUser($this->login, $this->password, $this->fio, $this->mail, $this->role);
-
-        if ($result['id'] >= 0) {
-
-            header('Location: /admin/users/user/' . $result['id']);
+        $data = [
+          "login" => $this->login,
+          "password" => password_hash($this->password, PASSWORD_BCRYPT),
+          "fio" => $this->fio,
+          "mail" => $this->mail,
+          "role" => $this->role
+        ];
+        $id = MAdminUser::addUser($data);
+        if ($id) {
+            header('Location: /admin/users/user/' . $id);
             exit();
-
         }else{
-
-            $_SESSION['error'] = $result;
+            $_SESSION['error'] = 'Ошибка добавления';
             header('Location: /admin/users');
             exit();
         }
-
     }
 
-	//Обновление пользователя
+	  //Обновление пользователя
     public function action_update(){
-
-
-        $result = $this->users->updateUser($this->id, $this->login, $this->new_login, $this->fio, $this->mail, $this->role);
-
-        if ($result == true) {
+        $result = MAdminUser::updateUser($this->id, $this->login, $this->new_login, $this->fio, $this->mail, $this->role);
+        if ($result) {
             $_SESSION['message'] = 'Пользователь обновлен';
             $_SESSION['role'] = $this->role;
             header('Location: /admin/users/user/' . $this->id);
@@ -101,15 +82,12 @@ class CAdminUser extends CAdminController
             header('Location: /admin/users/user/'. $this->id);
             exit();
         }
-
     }
 
-	//Обновление пароля
+	  //Обновление пароля
     public function action_updatepass(){
-
-        $result = $this->users->updateUserPass($this->id, $this->old_pass, $this->new_pass);
-
-        if ($result == true) {
+        $result = MAdminUser::updateUserPass($this->id, $this->old_pass, $this->new_pass);
+        if ($result) {
             $_SESSION['message'] = 'Пароль обновлен';
             header('Location: /admin/users/user/' . $this->id);
             exit();
@@ -118,14 +96,11 @@ class CAdminUser extends CAdminController
             header('Location: /admin/users/user/'. $this->id);
             exit();
         }
-
     }
 
-	//Вывод шаблона списка пользователей
+	  //Вывод шаблона списка пользователей
     public function action_index(){
-        
-        $items = $this->users->selectUser();
-
+        $items = MAdminUser::selectUser();
         //Настройки
         $title = 'Список пользователей';
         $header = 'Список пользователей';
@@ -161,16 +136,12 @@ class CAdminUser extends CAdminController
         $smarty->display('users.page.tpl');
 
         //Очистка переменных
-        $smarty->clearAllAssign(); 
-
+        $smarty->clearAllAssign();
     }
 
 	//Вывод шаблона профиля пользователя
     public function action_user(){
-        
-        $item = $this->users->selectUser($this->params);
-
-
+        $item = MAdminUser::selectUser($this->params);
         //Настройки
         $title = 'Профиль пользователя';
         $header = 'Профиль пользователя';
@@ -197,15 +168,12 @@ class CAdminUser extends CAdminController
 
         //Очистка переменных
         $smarty->clearAllAssign();
-
     }
 
-	//Удаление пользователя
+	  //Удаление пользователя
     public function action_del(){
-
-        $result = $this->users->deleteUser($this->params);
-
-        if ($result == true) {
+        $result = MAdminUser::deleteUser($this->params);
+        if ($result) {
             header('Location: /admin/users');
             exit();
         }else{
@@ -213,7 +181,6 @@ class CAdminUser extends CAdminController
             header('Location: /admin/users/user' . $this->params);
             exit();
         }
-
     }
 
 }

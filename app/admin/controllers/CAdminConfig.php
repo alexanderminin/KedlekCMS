@@ -1,51 +1,35 @@
 <?php
 namespace Cms\Admin\Controllers;
 
-use Cms\Admin\Models\AdminConfigManager;
-use Cms\Admin\Models\AdminPageManager;
+use Cms\Admin\Models\MAdminConfig;
+use Cms\Admin\Models\MAdminPage;
 
 //Контроллер галереи
 class CAdminConfig extends CAdminController
 {
-
-    public $settings;
     public $config;
 
     function __construct(\Slim\Slim $context){
-
         parent::__construct($context);
-
-        $this->settings = new AdminConfigManager();
-
         if ($this->getContext()->request()->isPost()){
-
             if (!empty($this->getContext()->request()->post('config'))){
                 $this->config = (array)$this->getContext()->request()->post('config');
             }
-
         }
-
     }
 
-	//Обновление настроек
+	  //Обновление настроек
     public function action_update(){
-
         foreach ($this->config as $config => $value) {
-            
-            $this->settings->updateConfig($config, $value);
-
+            MAdminConfig::updateConfig($config, $value);
         }
-
         header('Location:' . $_SERVER['HTTP_REFERER']);
         exit();
-
     }
 
-	//Вывод шаблона Настройки адм. части
+	  //Вывод шаблона Настройки адм. части
     public function action_admin(){
-
         $site_settings = $this->site_config;
-
         //Параметры страницы
         $title = 'Настройки сайта';
         $header = 'Настройки сайта';
@@ -71,15 +55,13 @@ class CAdminConfig extends CAdminController
         $smarty->display('config_admin.page.tpl');
 
         //Очистка переменных
-        $smarty->clearAllAssign(); 
-
+        $smarty->clearAllAssign();
     }
 
     //Вывод шаблона Настройки сайта
     public function action_site(){
-
         $site_settings = $this->site_config;
-        $themes = $this->settings->readThemes();
+        $themes = MAdminConfig::readThemes();
 
         //Параметры страницы
         $title = 'Настройки сайта';
@@ -109,15 +91,12 @@ class CAdminConfig extends CAdminController
         $smarty->display('config_site.page.tpl');
 
         //Очистка переменных
-        $smarty->clearAllAssign(); 
-
+        $smarty->clearAllAssign();
     }
 
-	//Вывод шаблона Настройки контактный данных (страница контакты)
+	  //Вывод шаблона Настройки контактный данных (страница контакты)
     public function action_contacts(){
-
         $site_settings = $this->site_config;
-
         //Параметры страницы
         $title = 'Стр. контакты';
         $header = 'Стр. контакты';
@@ -147,18 +126,13 @@ class CAdminConfig extends CAdminController
         $smarty->display('config_contacts.page.tpl');
 
         //Очистка переменных
-        $smarty->clearAllAssign(); 
-
+        $smarty->clearAllAssign();
     }
 
-	//Вывод шаблона Настройки главной страницы
+	  //Вывод шаблона Настройки главной страницы
     public function action_home(){
-
         $site_settings = $this->site_config;
-
-        $page = new AdminPageManager();
-        $pages = $page->selectPageMenu();
-
+        $pages = MAdminPage::selectAllPages();
         //Параметры страницы
         $title = 'Главная стр.';
         $header = 'Главная стр.';
@@ -188,36 +162,24 @@ class CAdminConfig extends CAdminController
         $smarty->display('config_home.page.tpl');
 
         //Очистка переменных
-        $smarty->clearAllAssign(); 
-
+        $smarty->clearAllAssign();
     }
 
-	//Вывод шаблона Настройки SMS
+	  //Вывод шаблона Настройки SMS
     public function action_sms(){
-
         if ($this->site_config["sms_active"] == '2'){
-
             $bytehandId = $this->site_config["bytehandId"];
             $bytehandKey = $this->site_config["bytehandKey"];
-
             $result = @file_get_contents('http://bytehand.com:3800/balance?id='.$bytehandId.'&key='.$bytehandKey);
             if ($result === false){
-
                 $balance = 'Нет инф.';
-            
             }else{
-                
                 $result = json_decode($result);
-
                 $balance = round($result->description, 2) . ' р.';
-
             }
         } else {
-
             $balance = 'Не активно';
-
         }
-
         $site_settings = $this->site_config;
 
         //Параметры страницы
@@ -247,15 +209,12 @@ class CAdminConfig extends CAdminController
         $smarty->display('config_sms.page.tpl');
 
         //Очистка переменных
-        $smarty->clearAllAssign(); 
-
+        $smarty->clearAllAssign();
     }
 
-	//Вывод шаблона Настройки Социальных кнопок
-	public function action_social(){
-
+    //Вывод шаблона Настройки Социальных кнопок
+    public function action_social(){
         $site_settings = $this->site_config;
-
         //Параметры страницы
         $title = 'Соц. кнопки';
         $header = 'Соц. кнопки';
@@ -286,15 +245,12 @@ class CAdminConfig extends CAdminController
         $smarty->display('config_social.page.tpl');
 
         //Очистка переменных
-        $smarty->clearAllAssign(); 
-
+        $smarty->clearAllAssign();
     }
 
-	//Вывод шаблона Настройки счетчиков аналитики
-	public function action_analytics(){
-
+	  //Вывод шаблона Настройки счетчиков аналитики
+	  public function action_analytics(){
         $site_settings = $this->site_config;
-
         //Параметры страницы
         $title = 'Настройки сайта';
         $header = 'Настройки сайта';
@@ -321,8 +277,7 @@ class CAdminConfig extends CAdminController
         $smarty->display('config_analytics.page.tpl');
 
         //Очистка переменных
-        $smarty->clearAllAssign(); 
-
+        $smarty->clearAllAssign();
     }
 
 }

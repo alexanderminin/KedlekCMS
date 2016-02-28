@@ -1,13 +1,12 @@
 <?php
 namespace Cms\Admin\Controllers;
 
-use Cms\Admin\Models\AdminGalleryManager;
+use Cms\Admin\Models\MAdminGallery;
 
 //Контроллер галереи
 class CAdminGallery extends CAdminController
 {
 
-    public $gallery;
     public $title;
     public $descr;
     public $datetime;
@@ -24,71 +23,51 @@ class CAdminGallery extends CAdminController
     public $seo_keywords;
 
     function __construct(\Slim\Slim $context){
-
         parent::__construct($context);
-
-        $this->gallery = new AdminGalleryManager();
-
         if ($this->getContext()->request()->isPost()){
-
             if (!empty($this->getContext()->request()->post('title'))){
                 $this->title = $this->string_valid($this->getContext()->request()->post('title'));
             }
-
             if (!empty($this->getContext()->request()->post('descr'))){
                 $this->descr = $this->string_valid($this->getContext()->request()->post('descr'));
             }
-
             if (!empty($this->getContext()->request()->post('datetime'))){
                 $this->datetime = $this->string_valid($this->getContext()->request()->post('datetime'));
             }
-
             if (!empty($this->getContext()->request()->post('file'))){
                 $this->file = $this->string_valid($this->getContext()->request()->post('file'));
             }
-
             if (!empty($this->getContext()->request()->post('type'))){
                 $this->type = abs((int)$this->getContext()->request()->post('type'));
             }
-
             if (!empty($this->getContext()->request()->post('id'))){
                 $this->id = abs((int)$this->getContext()->request()->post('id'));
             }
-
             if (!empty($this->getContext()->request()->post('url'))){
                 $this->url = $this->string_valid($this->getContext()->request()->post('url'));
             }
-
             if (!empty($this->getContext()->request()->post('g_id'))){
                 $this->g_id = abs((int)$this->getContext()->request()->post('g_id'));
             }
-
             if (!empty($this->getContext()->request()->post('gallery_list_id'))){
                 $this->gallery_list_id = abs((int)$this->getContext()->request()->post('gallery_list_id'));
             }
-
             if (!empty($this->getContext()->request()->post('position'))){
                 $this->position = $this->string_valid($this->getContext()->request()->post('position'));
             }
-
             if (!empty($this->getContext()->request()->post('ord'))){
                 $this->ord = $this->string_valid($this->getContext()->request()->post('ord'));
             }
-
             if (!empty($this->getContext()->request()->post('seo_title'))){
                 $this->seo_title = $this->string_valid($this->getContext()->request()->post('seo_title'));
             }
-
             if (!empty($this->getContext()->request()->post('seo_descr'))){
                 $this->seo_descr = $this->string_valid($this->getContext()->request()->post('seo_descr'));
             }
-
             if (!empty($this->getContext()->request()->post('seo_keywords'))){
                 $this->seo_keywords = $this->string_valid($this->getContext()->request()->post('seo_keywords'));
             }
-
         }
-
     }
 
     //-----------------------------
@@ -97,59 +76,45 @@ class CAdminGallery extends CAdminController
 
     //Создаем новый раздел галереи
     public function action_add_gallery_list(){
-        
-        $result = $this->gallery->addGalleryList($this->url, $this->title, $this->seo_title, $this->seo_descr, $this->seo_keywords);
-
-        if ($result['id'] >= 0) {
-
+        $result = MAdminGallery::addGalleryList($this->url, $this->title, $this->seo_title, $this->seo_descr, $this->seo_keywords);
+        if ($result) {
             header('Location: /admin/gallerylist');
             exit();
-
-        }else{
-
-            $_SESSION['error'] = $result;
+        } else {
+            $_SESSION['error'] = 'Ошибка добавления';
             header('Location: /admin/gallerylist');
             exit();
-
         }
-
     }
 
     //Обновление раздела галерея
     public function action_update_gallery_list(){
-
-        $result = $this->gallery->updateGalleryList($this->id, $this->url, $this->title, $this->seo_title, $this->seo_descr, $this->seo_keywords);
-
-        if ($result == true) {
+        $result = MAdminGallery::updateGalleryList($this->id, $this->url, $this->title, $this->seo_title, $this->seo_descr, $this->seo_keywords);
+        if ($result) {
             header('Location: /admin/gallerylist');
             exit();
-        }else{
-            $_SESSION['error'] = $result;
+        } else {
+            $_SESSION['error'] = 'Ошибка добавления';
             header('Location: /admin/gallerylist');
             exit();
         }
-
     }
 
     //Проверка url создаваемого раздела на уникальность
     public function action_unic(){
-
-        exit($this->gallery->unicGalleryList($this->url, '0'));
-
+        echo MAdminGallery::unicGalleryList($this->url, '0');
+        exit();
     }
 
     //Проверка url обновляемого раздела на уникальность при обновлении
     public function action_unicexist(){
-
-        exit($this->gallery->unicGalleryList($this->url, $this->id));
-
+        echo MAdminGallery::unicGalleryList($this->url, $this->id);
+        exit();
     }
 
     //Вывод шаблона разделов галереи
     public function action_index(){
-        
-        $items = $this->gallery->selectGalleryListAll();
-
+        $items = MAdminGallery::selectGalleryListAll();
         //Настройки
         $title = 'Список разделов галереи';
         $header = 'Список разделов галереи';
@@ -179,13 +144,11 @@ class CAdminGallery extends CAdminController
         $smarty->display('gallery_list.page.tpl');
 
         //Очистка переменных
-        $smarty->clearAllAssign(); 
-
+        $smarty->clearAllAssign();
     }
 
     //Вывод шаблона добавления раздела галереи
     public function action_addgallerylist(){
-
         //Настройки
         $title = 'Добавление раздела галереи';
         $header = 'Добавление раздела галереи';
@@ -217,14 +180,11 @@ class CAdminGallery extends CAdminController
 
         //Очистка переменных
         $smarty->clearAllAssign();
-
     }
 
     //Вывод шаблона обновления раздела галереи
     public function action_updgallerylist(){
-
-        $item = $this->gallery->selectGalleryList($this->params);
-
+        $item = MAdminGallery::selectGalleryList($this->params);
         //Настройки
         $title = 'Редактирование раздела галереи';
         $header = 'Редактирование раздела галереи';
@@ -257,31 +217,26 @@ class CAdminGallery extends CAdminController
 
         //Очистка переменных
         $smarty->clearAllAssign();
-
     }
 
     //Удаление раздела галереи с проверкой на наличие элементов
     public function action_del_gallery_list(){
-
-        $count = $this->gallery->countGallery($this->params);
-
+        $count = MAdminGallery::countGallery($this->params);
         if($count == 0){
-            $result = $this->gallery->deleteGalleryList($this->params);
-
-            if ($result == true) {
+            $result = MAdminGallery::deleteGalleryList($this->params);
+            if ($result) {
                 header('Location: /admin/gallerylist');
                 exit();
-            }else{
+            } else {
                 $_SESSION['error'] = $result;
                 header('Location: /admin/gallerylist');
                 exit();
             }
-        }else{
+        } else {
             $_SESSION['error'] = 'У галереи есть элементы в кол-ве: ' . $count . ' шт. Для начала необходимо удалить их.';
             header('Location: /admin/gallerylist');
             exit();
         }
-
     }
 
     //-----------------------------
@@ -290,152 +245,110 @@ class CAdminGallery extends CAdminController
 
     //Преобразование Адреса для миниатюры
     public function action_thumb_path(){
-
         $thumb = explode('/', $this->file);
-
         $count = count($thumb) - 1;
-
         if ($count >= 1){
-
             $thumb[] = $thumb[$count];
             $thumb[$count] = 'thumb';
-
-        }else{
-
+        } else {
             $thumb[1] = $thumb[0];
             $thumb[0] = 'thumb';
-
         }
-
         $thumb = implode('/', $thumb);
-
         return $thumb;
-
     }
 
     //AJAX запрос на Преобразование Адреса для миниатюры
     public function action_thumb(){
-
-        exit($this->action_thumb_path());
-
+        echo $this->action_thumb_path();
+        exit();
     }
-
 
     //Добавление элемета галереи (Альбом, видео)
     public function action_add(){
-
         if($this->type == 1){
-
             $thumb = $this->action_thumb_path();
-
-        }else{
-
+        } else {
             $thumb ='';
-
         }
-        
-        $result = $this->gallery->addGallery($this->title, $this->descr, $this->datetime, $this->type, $this->file, $thumb, $this->seo_title, $this->seo_descr, $this->seo_keywords, $this->gallery_list_id, $this->url);
-
-        if ($result['id'] >= 0) {
-
+        $result = MAdminGallery::addGallery($this->title, $this->descr, $this->datetime, $this->type, $this->file, $thumb, $this->seo_title, $this->seo_descr, $this->seo_keywords, $this->gallery_list_id, $this->url);
+        if ($result) {
             if($this->type == 1){
                 header('Location: /admin/gallerylist/updgallery/' . $result['id']);
             }
-
             if($this->type == 2){
                 header('Location: /admin/gallerylist/gallery/' . $this->gallery_list_id);
-            } 
-
+            }
             exit();
-
-        }else{
-
-            $_SESSION['error'] = $result;
-
+        } else {
+            $_SESSION['error'] = 'Ошибка добавления';
             if($this->type == 1){
                 header('Location: /admin/gallerylist/addgallery');
             }
-
             if($this->type == 2){
                 header('Location: /admin/gallerylist/gallery/' . $this->gallery_list_id);
             }
-
             exit();
         }
-
     }
 
     //Обновление элемета галереи (Альбома)
     public function action_update(){
-
         $thumb = $this->action_thumb_path();
-
-        $result = $this->gallery->updateGallery($this->id, $this->title, $this->descr, $this->datetime, $this->file, $thumb, $this->seo_title, $this->seo_descr, $this->seo_keywords, $this->gallery_list_id, $this->url);
-
-        if ($result == true) {
+        $result = MAdminGallery::updateGallery($this->id, $this->title, $this->descr, $this->datetime, $this->file, $thumb, $this->seo_title, $this->seo_descr, $this->seo_keywords, $this->gallery_list_id, $this->url);
+        if ($result) {
             header('Location: /admin/gallerylist/updgallery/' . $this->id);
             exit();
-        }else{
-            $_SESSION['error'] = $result;
+        } else {
+            $_SESSION['error'] = 'Ошибка обновления';
             header('Location: /admin/gallerylist/updgallery/'. $this->id);
             exit();
         }
-
     }
 
     //Обновление элемета галереи (Видео)
     public function action_update_video(){
-
-        $result = $this->gallery->updateGalleryVideo($this->id, $this->title, $this->descr, $this->datetime, $this->file, $this->gallery_list_id);
-
-        if ($result == true) {
+        $result = MAdminGallery::updateGalleryVideo($this->id, $this->title, $this->descr, $this->datetime, $this->file, $this->gallery_list_id);
+        if ($result) {
             header('Location: /admin/gallerylist/updgalleryvideo/' . $this->id);
             exit();
-        }else{
-            $_SESSION['error'] = $result;
+        } else {
+            $_SESSION['error'] = 'Ошибка обновления';
             header('Location: /admin/gallerylist/updgalleryvideo/'. $this->id);
             exit();
         }
-
     }
 
     //Проверка url создаваемого альбом на уникальность
     public function action_unic_gallery(){
-
-        exit($this->gallery->unicGallery($this->url, '0'));
-
+        echo MAdminGallery::unicGallery($this->url, '0');
+        exit();
     }
 
     //Проверка url обновляемого альбома на уникальность при обновлении
     public function action_unicexist_gallery(){
-
-        exit($this->gallery->unicGallery($this->url, $this->id));
-
+        echo MAdminGallery::unicGallery($this->url, $this->id);
+        exit();
     }
 
     //Удаление элемента галереи
     public function action_del(){
-
-        $result = $this->gallery->deleteGallery($this->params);
-
-        if ($result == true) {
+        $result = MAdminGallery::deleteGallery($this->params);
+        if ($result) {
             header('Location: /admin/gallerylist');
             exit();
         }else{
-            $_SESSION['error'] = $result;
+            $_SESSION['error'] = 'Ошибка удаления';
             header('Location: /admin/gallerylist');
             exit();
         }
-
     }
 
     //Вывод шаблона списка элементов галереи
     public function action_gallery(){
-
-        $result = $this->gallery->selectGalleryList($this->params);
+        $result = MAdminGallery::selectGalleryList($this->params);
         $gallery_title = $result['title'];
-        
-        $items = $this->gallery->selectAllGallery($this->params);
+        $items = MAdminGallery::selectAllGallery($this->params);
 
         //Настройки
         $javascript = 
@@ -465,15 +378,11 @@ class CAdminGallery extends CAdminController
 
         //Очистка переменных
         $smarty->clearAllAssign();
-
     }
-
-
+    
     //Вывод шаблона добавления видео
     public function action_addvideo(){
-
-        $gallery_list = $this->gallery->selectGalleryListMenu();
-
+        $gallery_list = MAdminGallery::selectGalleryListMenu();
         //Настройки
         $title = 'Добавить видео';
         $header = 'Добавить видео';
@@ -515,14 +424,11 @@ class CAdminGallery extends CAdminController
 
         //Очистка переменных
         $smarty->clearAllAssign();
-
     }
 
     //Вывод шаблона добавления альбома
     public function action_addgallery(){
-
-        $gallery_list = $this->gallery->selectGalleryListMenu();
-
+        $gallery_list = MAdminGallery::selectGalleryListMenu();
         //Настройки
         $title = 'Добавить альбом';
         $header = 'Добавить альбом';
@@ -568,16 +474,14 @@ class CAdminGallery extends CAdminController
 
         //Очистка переменных
         $smarty->clearAllAssign();
-
     }
 
     //Вывод шаблона обновления альбома
     public function action_updgallery(){
-
-        $gallery_list = $this->gallery->selectGalleryListMenu();
+        $gallery_list = MAdminGallery::selectGalleryListMenu();
         $g_id = $this->params;
-        $item = $this->gallery->selectGallery($g_id);
-        $items = $this->gallery->selectGalleryItems($g_id);
+        $item = MAdminGallery::selectGallery($g_id);
+        $items = MAdminGallery::selectGalleryItems($g_id);
 
         //Настройки
         $title = 'Редактировать альбом';
@@ -628,16 +532,13 @@ class CAdminGallery extends CAdminController
         $smarty->display('gallery_upd.page.tpl');
 
         //Очистка переменных
-        $smarty->clearAllAssign(); 
-
+        $smarty->clearAllAssign();
     }
 
     //Вывод шаблона обновления видео
     public function action_updgalleryvideo(){
-
-        $gallery_list = $this->gallery->selectGalleryListMenu();
-        $item = $this->gallery->selectGallery($this->params);
-
+        $gallery_list = MAdminGallery::selectGalleryListMenu();
+        $item = MAdminGallery::selectGallery($this->params);
         //Настройки
         $title = 'Редактировать видео';
         $header = 'Редактировать видео';
@@ -675,8 +576,7 @@ class CAdminGallery extends CAdminController
         $smarty->display('gallery_video_upd.page.tpl');
 
         //Очистка переменных
-        $smarty->clearAllAssign(); 
-
+        $smarty->clearAllAssign();
     }
 
     //-----------------------------
@@ -685,63 +585,40 @@ class CAdminGallery extends CAdminController
     
     //Добавление фото в альбом
     public function action_itemadd(){
-
         $thumb = $this->action_thumb_path();
-        
-        $result = $this->gallery->addGalleryItem($this->file, $thumb, $this->g_id);
-
-        if ($result['id'] >= 0) {
-         
+        $result = MAdminGallery::addGalleryItem($this->file, $thumb, $this->g_id);
+        if ($result) {
             header('Location: /admin/gallerylist/updgallery/' . $this->g_id);
             exit();
-
         }else{
-
-            $_SESSION['error'] = $result;
+            $_SESSION['error'] = 'Ошибка добавления';
             header('Location: /admin/gallerylist/updgallery/' . $this->g_id);
             exit();
         }
-
     }
 
     //Обновление порядка фото в альбоме
     public function action_itemsupdate(){
-
         $this->position = json_decode($this->position, true);
-
         $items = $this->position;
-
         foreach ($items as $item){
-
-            $this->gallery->updateGalleryItem($item['id'], $item['ord']);
-
+            MAdminGallery::updateGalleryItem($item['id'], $item['ord']);
         }
-
         echo 'Новый порядок сохранен';
-
         exit();
-
-
     }
 
     //Удаление фото из альбома
     public function action_delitem(){
-
-
-        $id = $this->gallery->selectGalleryItem($this->params);
-
-
-        $result = $this->gallery->deleteGalleryItem($this->params);
-
-        if ($result == true) {
+        $id = MAdminGallery::selectGalleryItem($this->params);
+        $result = MAdminGallery::deleteGalleryItem($this->params);
+        if ($result) {
             header('Location: /admin/gallerylist/updgallery/' . $id['g_id']);
             exit();
-        }else{
-            $_SESSION['error'] = $result;
+        } else {
+            $_SESSION['error'] = 'Ошибка удаления';
             header('Location: /admin/gallerylist/updgallery/' . $id['g_id']);
             exit();
         }
-
     }
-
 }

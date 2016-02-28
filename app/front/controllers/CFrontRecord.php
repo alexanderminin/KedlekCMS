@@ -1,18 +1,16 @@
 <?php
 namespace Cms\Front\Controllers;
 
-use Cms\Front\Models\FrontRecordManager;
+use Cms\Front\Models\MFrontRecord;
 
 //Контроллер записи
 class CFrontRecord extends CFrontController
 {
 
-	//Вывод шаблона записи
+	  //Вывод шаблона записи
     public function action_index(){
-
         //Получаем данные страницы
-        $class = new FrontRecordManager();
-        $record = $class->selectRecord($this->params[1]);
+        $record = MFrontRecord::selectRecord($this->params[1]);
 
         //Инициализация Smarty
         $smarty = $this->SmartyInit();
@@ -36,8 +34,5 @@ class CFrontRecord extends CFrontController
 
         //Очистка переменных
         $smarty->clearAllAssign();
-
     }
-
-
 }

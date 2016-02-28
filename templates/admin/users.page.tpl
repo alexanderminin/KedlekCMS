@@ -59,7 +59,7 @@
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                   <h4 class="modal-title">Добавить пользователя</h4>
                 </div>
-                <form role="form" action="/users/add" method="post">
+                <form role="form" action="/admin/users/add" method="post">
                 <div class="modal-body">
 
                     <div class="form-group">

@@ -9,40 +9,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_POST['login']    == '' ||
         $_POST['password'] == '' ||
         $_POST['mail']     == '' ){
-
         header('Location: /install.php?error=Заполните все поля (поле DB password - может быть пустым)');
-
     }
 
     $host = $_POST['dbhost'];
     $dbname = $_POST['dbname'];
     $dbuser = $_POST['dbuser'];
     $dbpassword = $_POST['dbpassword'];
-
     $site = $_POST['site'];
-
     $login = $_POST['login'];
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
     $mail = $_POST['mail'];
 
-    $text = "<?php" . "\r\n";
-    $text .= "define('DB_HOST', 'mysql:host=" . $host . ";dbname=" . $dbname . "');" . "\r\n";
-    $text .= "define('DB_USER', '" . $dbuser . "');" . "\r\n";
-    $text .= "define('DB_PASS', '" . $dbpassword . "');" . "\r\n";
+    $text = "<?php\r\n";
+    $text .= "  'debug' => true,\r\n";
+    $text .= "  'illuminate_db' => [\r\n";
+    $text .= "    'driver'    => 'mysql',\r\n";
+    $text .= "    'host'      => '$host',\r\n";
+    $text .= "    'database'  => '$dbname',\r\n";
+    $text .= "    'username'  => '$dbuser',\r\n";
+    $text .= "    'password'  => '$dbpassword',\r\n";
+    $text .= "    'charset'   => 'utf8',\r\n";
+    $text .= "    'collation' => 'utf8_general_ci'\r\n";
+    $text .= "  ]\r\n";
+    $text .= "];";
      
     $fp = fopen("config.php", "w");
-     
     fwrite($fp, $text);
-     
     fclose($fp);
 
-    include "app/config.php";
-
-    $pdo = new PDO(DB_HOST, DB_USER, DB_PASS);
+    $pdo = new PDO($host, $dbuser, $dbpassword);
     $pdo->exec("set names utf8");
 
     $stmt = $pdo->query("
-
     CREATE TABLE IF NOT EXISTS `kedlek_category` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `url` varchar(255) NOT NULL,
@@ -53,7 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       PRIMARY KEY (`id`),
       UNIQUE KEY `url` (`url`)
     ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
-
 
     CREATE TABLE IF NOT EXISTS `kedlek_category_records` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -72,7 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       UNIQUE KEY `url` (`url`)
     ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
-
     CREATE TABLE IF NOT EXISTS `kedlek_config` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `config` varchar(255) NOT NULL,
@@ -80,7 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       PRIMARY KEY (`id`),
       UNIQUE KEY `config` (`config`)
     ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=38 ;
-
 
     INSERT INTO `kedlek_config` (`id`, `config`, `value`) VALUES
     (1, 'admin_title', '". $site ."'),
@@ -176,7 +172,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     (2, 0, 'Главная', 2, '/home', '2'),
     (10, 0, 'Контакты', 13, '/contact', '2');
 
-
     CREATE TABLE IF NOT EXISTS `kedlek_messages` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `type` enum('1','2','3') NOT NULL,
@@ -226,9 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     chmod("lib/templates_c/admin", 755);
     chmod("lib/templates_c/front", 755);
     chmod("install.php", 755);
-
     unlink('install.php');
-
     header('Location: /admin');
 
 }?>
