@@ -217,6 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     ");
     
+    chmod("images", 755);
     chmod("lib/cache", 755);
     chmod("lib/templates_c/admin", 755);
     chmod("lib/templates_c/front", 755);
