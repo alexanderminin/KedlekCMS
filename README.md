@@ -51,4 +51,5 @@
 <li>Отредактируйте файл config.php</li>
 <li>Запустите install.php</li>
 <li>После завершения удалите install.php и массив 'install_config' в config.php</li>
+<li>Установите права на запись у папок: '/images', '/lib/cache', '/lib/templates_c/admin', '/lib/templates_c/front'</li>
 </ul>
