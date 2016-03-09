@@ -10,7 +10,7 @@
         }
     ],
     "autoload": {
-        "psr-4": {"Cms\\": "app/"}
+        "psr-4": {"Cms\\": "App/"}
     },
     "require": {
         "slim/slim": "~2.6",

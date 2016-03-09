@@ -43,3 +43,12 @@
 <li>MySQL 5.5 или выше</li>
 <li>mod_rewrite (модуль Apache)</li>
 </ul>
+
+<h2>Установка:</h2>
+<ul>
+<li>Установите пакеты с помощью composer install</li>
+<li>Переименуйте фаил настроек config_dev.php в config.php</li>
+<li>Отредактируйте файл config.php</li>
+<li>Запустите install.php</li>
+<li>После завершения удалите install.php и массив 'install_config' в config.php</li>
+</ul>
