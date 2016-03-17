@@ -26,11 +26,11 @@ class MFrontGallery
                   g.seo_title,
                   g.seo_descr,
                   g.seo_keywords,
-                  g.gallery_list_id
+                  g.gallery_list_id,
                   gl.url AS parent_url,
                   gl.title AS parent_title
             '))
-            ->join('kedlek_gallery_list as gl', 'gl.gallery_list_id', '=', 'g.id')
+            ->join('kedlek_gallery_list as gl', 'g.gallery_list_id', '=', 'gl.id')
             ->where('g.url', $url)
             ->first();
     }

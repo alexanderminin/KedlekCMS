@@ -45,26 +45,20 @@ class CAdminPage extends CAdminController
     public function action_add(){
         $result = MAdminPage::addPage($this->url, $this->title, $this->text, $this->seo_title, $this->seo_descr, $this->seo_keywords);
         if ($result){
-            header('Location: /admin/pages/page/' . $result);
-            exit();
+            $this->getContext()->redirect($this->getContext()->urlFor('admin_pages_edit' , ['id' => $result]));
         } else {
             $_SESSION['error'] = 'Ошибка добавления';
-            header('Location: /admin/pages/index');
-            exit();
+            $this->getContext()->redirect($this->getContext()->urlFor('admin_pages'));
         }
     }
 
 	  //Обновление страницы
     public function action_update(){
         $result = MAdminPage::updatePage($this->id, $this->url, $this->title, $this->text, $this->seo_title, $this->seo_descr, $this->seo_keywords);
-        if ($result){
-            header('Location: /admin/pages/page/' . $this->id);
-            exit();
-        } else {
-            if ($result !== 0) $_SESSION['error'] = 'Ошибка обновления';
-            header('Location: /admin/pages/page/'. $this->id);
-            exit();
+        if ($result !== 0 && $result !== 1) {
+            $_SESSION['error'] = 'Ошибка обновления страницы';
         }
+        $this->getContext()->redirect($this->getContext()->urlFor('admin_pages_edit' , ['id' => $this->id]));
     }
 
 	  //Вывод шаблона списка страниц
@@ -141,7 +135,7 @@ class CAdminPage extends CAdminController
     }
 
 	  //Вывод шаблона страницы
-    public function action_page(){
+    public function action_edit(){
         $item = MAdminPage::selectPage($this->params);
         //Настройки
         $title = 'Страница';
@@ -195,14 +189,10 @@ class CAdminPage extends CAdminController
 	  //Удаление страницы
     public function action_del(){
         $result = MAdminPage::deletePage($this->params);
-        if ($result){
-            header('Location: /admin/pages');
-            exit();
-        } else {
+        if (!$result){
             $_SESSION['error'] = 'Ошибка удаления';
-            header('Location: /admin/pages');
-            exit();
         }
+        $this->getContext()->redirect($this->getContext()->urlFor('admin_pages'));
     }
 
 }

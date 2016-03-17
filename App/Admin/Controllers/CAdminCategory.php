@@ -64,27 +64,19 @@ class CAdminCategory extends CAdminController
 	  //Добавление категории
     public function action_add_category(){
         $result = MAdminCategory::addCategory($this->url, $this->title, $this->seo_title, $this->seo_descr, $this->seo_keywords);
-        if ($result){
-            header('Location: /admin/category');
-            exit();
-        } else {
-            $_SESSION['error'] = $result;
-            header('Location: /admin/category');
-            exit();
+        if (!$result){
+            $_SESSION['error'] = 'Ошибка добавления категории';
         }
+        $this->getContext()->redirect($this->getContext()->urlFor('admin_category'));
     }
 
 	  //Обновление категории
     public function action_update_category(){
         $result = MAdminCategory::updateCategory($this->id, $this->url, $this->title, $this->seo_title, $this->seo_descr, $this->seo_keywords);
-        if ($result){
-            header('Location: /admin/category');
-            exit();
-        } else {
-            if ($result !== 0) $_SESSION['error'] = 'Ошибка обновления';
-            header('Location: /admin/category');
-            exit();
+        if ($result !== 0 && $result !== 1) {
+            $_SESSION['error'] = 'Ошибка обновления категории';
         }
+        $this->getContext()->redirect($this->getContext()->urlFor('admin_category'));
     }
 
 	  //Вывод шаблона списка категорий
@@ -211,19 +203,13 @@ class CAdminCategory extends CAdminController
         $count = MAdminCategory::countRecords($this->params);
         if($count == 0){
             $result = MAdminCategory::deleteCategory($this->params);
-            if ($result){
-                header('Location: /admin/category');
-                exit();
-            } else {
-                $_SESSION['error'] = 'Ошибка удаления';
-                header('Location: /admin/category');
-                exit();
+            if (!$result){
+                $_SESSION['error'] = 'Ошибка удаления категории';
             }
         } else {
             $_SESSION['error'] = 'У категории есть записи в кол-ве: ' . $count . ' шт. Для начала необходимо удалить их.';
-            header('Location: /admin/category');
-            exit();
         }
+        $this->getContext()->redirect($this->getContext()->urlFor('admin_category'));
     }
 
     //Записи
@@ -246,28 +232,19 @@ class CAdminCategory extends CAdminController
     public function action_add_record(){
         $thumb = $this->action_thumb_path();
         $result = MAdminCategory::addRecord($this->category_id, $this->url, $this->title, $this->descr, $this->text, $this->seo_title, $this->seo_descr, $this->seo_keywords, $this->file, $thumb, $this->datetime);
-        if ($result){
-            header('Location: /admin/category/records/' . $this->category_id);
-            exit();
-        } else {
-            $_SESSION['error'] = 'Ошибка добавления';
-            header('Location: /admin/category/records/' . $this->category_id);
-            exit();
+        if (!$result){
+            $_SESSION['error'] = 'Ошибка добавления записи';
         }
+        $this->getContext()->redirect($this->getContext()->urlFor('admin_category_records', ['id' => $this->category_id]));
     }
 
 	  //Обновление записи
     public function action_update_record(){
-        $thumb = $this->action_thumb_path();
-        $result = MAdminCategory::updateRecord($this->id, $this->category_id, $this->url, $this->title, $this->descr, $this->text, $this->seo_title, $this->seo_descr, $this->seo_keywords, $this->file, $thumb, $this->datetime);
-        if ($result){
-            header('Location: /admin/category/records/' . $this->category_id);
-            exit();
-        } else {
-            if ($result !== 0) $_SESSION['error'] = 'Ошибка обновления';
-            header('Location: /admin/category/records/' . $this->category_id);
-            exit();
+        $result = MAdminCategory::updateRecord($this->id, $this->category_id, $this->url, $this->title, $this->descr, $this->text, $this->seo_title, $this->seo_descr, $this->seo_keywords, $this->file, $this->action_thumb_path(), $this->datetime);
+        if ($result !== 0 && $result !== 1) {
+            $_SESSION['error'] = 'Ошибка обновления записи';
         }
+        $this->getContext()->redirect($this->getContext()->urlFor('admin_category_records', ['id' => $this->category_id]));
     }
 
 	  //Вывод шаблона записи
@@ -425,14 +402,10 @@ class CAdminCategory extends CAdminController
 	  //Удаление записи
     public function action_delrecord(){
         $result = MAdminCategory::deleteRecord($this->params);
-        if ($result){
-            header('Location: /admin/category/records/' . $this->params);
-            exit();
-        } else {
-            $_SESSION['error'] = 'Ошибка удаления';
-            header('Location: /admin/category/records/' . $this->params);
-            exit();
+        if (!$result){
+            $_SESSION['error'] = 'Ошибка удаления записи';
         }
+        $this->getContext()->redirect($this->getContext()->urlFor('admin_category_records', ['id' => $this->params]));
     }
 
 	  //Проверка уникальности url записи

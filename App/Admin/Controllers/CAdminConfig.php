@@ -23,8 +23,7 @@ class CAdminConfig extends CAdminController
         foreach ($this->config as $config => $value){
             MAdminConfig::updateConfig($config, $value);
         }
-        header('Location:' . $_SERVER['HTTP_REFERER']);
-        exit();
+        $this->getContext()->redirect($_SERVER['HTTP_REFERER']);
     }
 
 	  //Вывод шаблона Настройки адм. части

@@ -9,8 +9,10 @@
 </aside>
 
 <section>
-    <h1>404</h1>
-    <p>Запрашиваемая страница не найдена</p>
+    <div class="col-lg-12 col-md-12 col-xs-12">
+        <h1 style="text-align: center; font-size: 6em;">404</h1>
+        <p style="text-align: center;">Запрашиваемая страница не найдена</p>
+    </div>
 </section>
 
 {*подключаем футер шаблона*}

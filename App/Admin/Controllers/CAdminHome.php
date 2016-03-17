@@ -6,7 +6,6 @@ use Cms\Admin\Models\MAdminMessages;
 //Контроллер главной страницы
 class CAdminHome extends CAdminController
 {
-
 	  //Вывод шаблона главной страницы
     public function action_index(){
         $items = MAdminMessages::selectNew();
@@ -22,13 +21,10 @@ class CAdminHome extends CAdminController
                 <script>
                   $("#card-table").cardtable({myClass:"stacktable small-only" });
                 </script>
-                
-
             ';
         $css =
             '
                 <link href="/dist/stacktable/stacktable.css" rel="stylesheet" />
-
             ';
 
         //Инициализация Smarty

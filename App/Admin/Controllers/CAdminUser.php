@@ -60,12 +60,10 @@ class CAdminUser extends CAdminController
         ];
         $result = MAdminUser::addUser($data);
         if ($result){
-            header('Location: /admin/users/user/' . $result);
-            exit();
+            $this->getContext()->redirect($this->getContext()->urlFor('admin_users_user' , ['id' => $result]));
         } else {
-            $_SESSION['error'] = 'Ошибка добавления';
-            header('Location: /admin/users');
-            exit();
+            $_SESSION['error'] = 'Ошибка добавления пользователя';
+            $this->getContext()->redirect($this->getContext()->urlFor('admin_users'));
         }
     }
 
@@ -75,13 +73,10 @@ class CAdminUser extends CAdminController
         if ($result){
             $_SESSION['message'] = 'Пользователь обновлен';
             $_SESSION['role'] = $this->role;
-            header('Location: /admin/users/user/' . $this->id);
-            exit();
-        } else {
-            if ($result !== 0) $_SESSION['error'] = 'Ошибка обновления';
-            header('Location: /admin/users/user/'. $this->id);
-            exit();
+        } elseif($result !== 0) {
+            $_SESSION['error'] = 'Ошибка обновления пользователя';
         }
+        $this->getContext()->redirect($this->getContext()->urlFor('admin_users_user' , ['id' => $this->id]));
     }
 
 	  //Обновление пароля
@@ -89,13 +84,10 @@ class CAdminUser extends CAdminController
         $result = MAdminUser::updateUserPass($this->id, $this->old_pass, $this->new_pass);
         if ($result){
             $_SESSION['message'] = 'Пароль обновлен';
-            header('Location: /admin/users/user/' . $this->id);
-            exit();
-        } else {
-            if ($result !== 0) $_SESSION['error'] = 'Ошибка';
-            header('Location: /admin/users/user/'. $this->id);
-            exit();
+        } elseif($result !== 0) {
+            $_SESSION['error'] = 'Ошибка обновления пароля';
         }
+        $this->getContext()->redirect($this->getContext()->urlFor('admin_users_user' , ['id' => $this->id]));
     }
 
 	  //Вывод шаблона списка пользователей
@@ -174,12 +166,10 @@ class CAdminUser extends CAdminController
     public function action_del(){
         $result = MAdminUser::deleteUser($this->params);
         if ($result){
-            header('Location: /admin/users');
-            exit();
+            $this->getContext()->redirect($this->getContext()->urlFor('admin_users'));
         } else {
             $_SESSION['error'] = 'Ошибка удаления';
-            header('Location: /admin/users/user' . $this->params);
-            exit();
+            $this->getContext()->redirect($this->getContext()->urlFor('admin_users_user' , ['id' => $this->params]));
         }
     }
 

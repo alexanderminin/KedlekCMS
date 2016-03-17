@@ -65,14 +65,10 @@ class CAdminMenu extends CAdminController
 	  //Добавление пункта меню
     public function action_add(){
         $result = MAdminMenu::addMenu($this->title, $this->target);
-        if ($result){
-            header('Location: /admin/menu');
-            exit();
-        } else {
-            $_SESSION['error'] = 'Ошибка добавления';
-            header('Location: /admin/menu');
-            exit();
+        if (!$result){
+            $_SESSION['error'] = 'Ошибка добавления пункта меню';
         }
+        $this->getContext()->redirect($this->getContext()->urlFor('admin_menu'));
     }
 
 	  //Вывод шаблона меню
@@ -154,14 +150,10 @@ class CAdminMenu extends CAdminController
 	  //Удаление пункта меню
     public function action_del(){
         $result = MAdminMenu::deleteMenu($this->params);
-        if ($result == true){
-            header('Location: /admin/menu');
-            exit();
-        } else {
-            $_SESSION['error'] = 'Ошибка удаления';
-            header('Location: /admin/menu');
-            exit();
+        if (!$result){
+            $_SESSION['error'] = 'Ошибка удаления пункта меню';
         }
+        $this->getContext()->redirect($this->getContext()->urlFor('admin_menu'));
     }
 
 	  //Преобразование массива в древовидный

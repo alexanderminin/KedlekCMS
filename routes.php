@@ -3,30 +3,25 @@
  * ADMIN
  */
 $app->group('/admin', function () use ($app) {
-  
-  $app->map('/', function () use ($app) {
+
+  $app->map('', function () use ($app) {
     /** @var $controller \Cms\Admin\Controllers\CAdminHome */
     $controller = new \Cms\Admin\Controllers\CAdminHome($app);
     $controller->action_index();
   })->via('GET', 'POST')->name('admin');
-  
+
   $app->map('/index', function () use ($app) {
     /** @var $controller \Cms\Admin\Controllers\CAdminHome */
     $controller = new \Cms\Admin\Controllers\CAdminHome($app);
     $controller->action_index();
   })->via('GET', 'POST')->name('admin_index');
-  
+
   $app->group('/menu', function () use ($app) {
-    $app->map('/', function () use ($app) {
+    $app->map('', function () use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminMenu */
       $controller = new \Cms\Admin\Controllers\CAdminMenu($app);
       $controller->action_index();
     })->via('GET', 'POST')->name('admin_menu');
-    $app->map('/index', function () use ($app) {
-      /** @var $controller \Cms\Admin\Controllers\CAdminMenu */
-      $controller = new \Cms\Admin\Controllers\CAdminMenu($app);
-      $controller->action_index();
-    })->via('GET', 'POST')->name('admin_menu_index');
     $app->map('/add', function () use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminMenu */
       $controller = new \Cms\Admin\Controllers\CAdminMenu($app);
@@ -49,7 +44,7 @@ $app->group('/admin', function () use ($app) {
       $controller->action_update();
     })->via('GET', 'POST')->name('admin_menu_update');
   });
-  
+
   $app->group('/config', function () use ($app) {
     $app->map('/home', function () use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminConfig */
@@ -71,11 +66,6 @@ $app->group('/admin', function () use ($app) {
       $controller = new \Cms\Admin\Controllers\CAdminConfig($app);
       $controller->action_contacts();
     })->via('GET', 'POST')->name('admin_config_contacts');
-    $app->map('/update', function () use ($app) {
-      /** @var $controller \Cms\Admin\Controllers\CAdminConfig */
-      $controller = new \Cms\Admin\Controllers\CAdminConfig($app);
-      $controller->action_update();
-    })->via('GET', 'POST')->name('admin_config_update');
     $app->map('/sms', function () use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminConfig */
       $controller = new \Cms\Admin\Controllers\CAdminConfig($app);
@@ -91,19 +81,19 @@ $app->group('/admin', function () use ($app) {
       $controller = new \Cms\Admin\Controllers\CAdminConfig($app);
       $controller->action_analytics();
     })->via('GET', 'POST')->name('admin_config_analytics');
+    $app->map('/update', function () use ($app) {
+      /** @var $controller \Cms\Admin\Controllers\CAdminConfig */
+      $controller = new \Cms\Admin\Controllers\CAdminConfig($app);
+      $controller->action_update();
+    })->via('GET', 'POST')->name('admin_config_update');
   });
-  
+
   $app->group('/login', function () use ($app) {
-    $app->map('/', function () use ($app) {
+    $app->map('', function () use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminController */
       $controller = new \Cms\Admin\Controllers\CAdminController($app);
       $controller->action_login();
     })->via('GET', 'POST')->name('admin_login');
-    $app->map('/index', function () use ($app) {
-      /** @var $controller \Cms\Admin\Controllers\CAdminController */
-      $controller = new \Cms\Admin\Controllers\CAdminController($app);
-      $controller->action_login();
-    })->via('GET', 'POST')->name('admin_login_index');
     $app->map('/check', function () use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminController */
       $controller = new \Cms\Admin\Controllers\CAdminController($app);
@@ -120,18 +110,13 @@ $app->group('/admin', function () use ($app) {
       $controller->action_logout();
     })->via('GET', 'POST')->name('admin_login_logout');
   });
-  
+
   $app->group('/users', function () use ($app) {
-    $app->map('/', function () use ($app) {
+    $app->map('', function () use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminUser */
       $controller = new \Cms\Admin\Controllers\CAdminUser($app);
       $controller->action_index();
     })->via('GET', 'POST')->name('admin_users');
-    $app->map('/index', function () use ($app) {
-      /** @var $controller \Cms\Admin\Controllers\CAdminUser */
-      $controller = new \Cms\Admin\Controllers\CAdminUser($app);
-      $controller->action_index();
-    })->via('GET', 'POST')->name('admin_users_index');
     $app->map('/add', function () use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminUser */
       $controller = new \Cms\Admin\Controllers\CAdminUser($app);
@@ -160,18 +145,13 @@ $app->group('/admin', function () use ($app) {
       $controller->action_del();
     })->via('GET', 'POST')->name('admin_users_del');
   });
-  
+
   $app->group('/messages', function () use ($app) {
-    $app->map('/', function () use ($app) {
+    $app->map('', function () use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminMessages */
       $controller = new \Cms\Admin\Controllers\CAdminMessages($app);
       $controller->action_index();
     })->via('GET', 'POST')->name('admin_messages');
-    $app->map('/index', function () use ($app) {
-      /** @var $controller \Cms\Admin\Controllers\CAdminMessages */
-      $controller = new \Cms\Admin\Controllers\CAdminMessages($app);
-      $controller->action_index();
-    })->via('GET', 'POST')->name('admin_messages_index');
     $app->map('/read/:id', function ($id) use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminMessages */
       $controller = new \Cms\Admin\Controllers\CAdminMessages($app);
@@ -185,31 +165,21 @@ $app->group('/admin', function () use ($app) {
       $controller->action_del();
     })->via('GET', 'POST')->name('admin_messages_del');
   });
-  
+
   $app->group('/home', function () use ($app) {
-    $app->map('/', function () use ($app) {
+    $app->map('', function () use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminHome */
       $controller = new \Cms\Admin\Controllers\CAdminHome($app);
       $controller->action_index();
     })->via('GET', 'POST')->name('admin_home');
-    $app->map('/index', function () use ($app) {
-      /** @var $controller \Cms\Admin\Controllers\CAdminHome */
-      $controller = new \Cms\Admin\Controllers\CAdminHome($app);
-      $controller->action_index();
-    })->via('GET', 'POST')->name('admin_home_index');
   });
 
   $app->group('/pages', function () use ($app) {
-    $app->map('/', function () use ($app) {
+    $app->map('', function () use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminPage */
       $controller = new \Cms\Admin\Controllers\CAdminPage($app);
       $controller->action_index();
     })->via('GET', 'POST')->name('admin_pages');
-    $app->map('/index', function () use ($app) {
-      /** @var $controller \Cms\Admin\Controllers\CAdminPage */
-      $controller = new \Cms\Admin\Controllers\CAdminPage($app);
-      $controller->action_index();
-    })->via('GET', 'POST')->name('admin_pages_index');
     $app->map('/add', function () use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminPage */
       $controller = new \Cms\Admin\Controllers\CAdminPage($app);
@@ -231,12 +201,12 @@ $app->group('/admin', function () use ($app) {
       $controller = new \Cms\Admin\Controllers\CAdminPage($app);
       $controller->action_addpage();
     })->via('GET', 'POST')->name('admin_pages_addpage');
-    $app->map('/page/:id', function ($id) use ($app) {
+    $app->map('/edit/:id', function ($id) use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminPage */
       $controller = new \Cms\Admin\Controllers\CAdminPage($app);
       $controller->params = $id;
-      $controller->action_page();
-    })->via('GET', 'POST')->name('admin_pages_page');
+      $controller->action_edit();
+    })->via('GET', 'POST')->name('admin_pages_edit');
     $app->map('/unic', function () use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminPage */
       $controller = new \Cms\Admin\Controllers\CAdminPage($app);
@@ -250,16 +220,11 @@ $app->group('/admin', function () use ($app) {
   });
 
   $app->group('/category', function () use ($app) {
-    $app->map('/', function () use ($app) {
+    $app->map('', function () use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminCategory */
       $controller = new \Cms\Admin\Controllers\CAdminCategory($app);
       $controller->action_index();
     })->via('GET', 'POST')->name('admin_category');
-    $app->map('/index', function () use ($app) {
-      /** @var $controller \Cms\Admin\Controllers\CAdminCategory */
-      $controller = new \Cms\Admin\Controllers\CAdminCategory($app);
-      $controller->action_index();
-    })->via('GET', 'POST')->name('admin_category_index');
     $app->map('/add_category', function () use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminCategory */
       $controller = new \Cms\Admin\Controllers\CAdminCategory($app);
@@ -348,16 +313,11 @@ $app->group('/admin', function () use ($app) {
   });
 
   $app->group('/gallerylist', function () use ($app) {
-    $app->map('/', function () use ($app) {
+    $app->map('', function () use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminGallery */
       $controller = new \Cms\Admin\Controllers\CAdminGallery($app);
       $controller->action_index();
     })->via('GET', 'POST')->name('admin_gallerylist');
-    $app->map('/index', function () use ($app) {
-      /** @var $controller \Cms\Admin\Controllers\CAdminGallery */
-      $controller = new \Cms\Admin\Controllers\CAdminGallery($app);
-      $controller->action_index();
-    })->via('GET', 'POST')->name('admin_gallerylist_index');
     $app->map('/add_gallery_list', function () use ($app) {
       /** @var $controller \Cms\Admin\Controllers\CAdminGallery */
       $controller = new \Cms\Admin\Controllers\CAdminGallery($app);
@@ -530,6 +490,12 @@ $app->map('/contact', function () use ($app) {
   $controller->action_index();
 })->via('GET', 'POST')->name('contact');
 
+$app->map('/404', function () use ($app) {
+  /** @var $controller \Cms\Front\Controllers\CFrontHome */
+  $controller = new \Cms\Front\Controllers\CFrontHome($app);
+  $controller->action_404();
+})->via('GET', 'POST')->name('404');
+
 $app->map('/:link_1', function ($link_1) use ($app) {
   /** @var $controller \Cms\Front\Controllers\CFrontRouting */
   $controller = new \Cms\Front\Controllers\CFrontRouting($app);
@@ -543,3 +509,7 @@ $app->map('/:link_1/:link_2', function ($link_1, $link_2) use ($app) {
   $controller->params[1] = $link_2;
   $controller->action_index();
 })->via('GET', 'POST');
+
+$app->notFound(function () use ($app) {
+  $app->redirect($app->urlFor('404'));
+});

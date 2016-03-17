@@ -41,41 +41,41 @@ class CFrontController
         return $this->context;
     }
 
+    //Сортируем массив меню по ключам
+    private function array_sort_it($items){
+        $menu_arr = [];
+        foreach ($items as $item){
+            $menu_arr[$item['id']]['id'] = $item['id'];
+            $menu_arr[$item['id']]['parent_id'] = $item['parent_id'];
+            $menu_arr[$item['id']]['title'] = $item['title'];
+            $menu_arr[$item['id']]['ord'] = $item['ord'];
+            $menu_arr[$item['id']]['target'] = $item['target'];
+            $menu_arr[$item['id']]['active'] = $item['active'];
+        }
+        return $menu_arr;
+    }
+
+    //Создаем древовидный массив меню
+    private function build_tree($data){
+        $tree = [];
+        foreach($data as $id => &$row){
+            if($row['parent_id'] == '0'){
+                $tree[$id] = &$row;
+            } else {
+                $data[$row['parent_id']]['childs'][$id] = &$row;
+            }
+        }
+        return $tree;
+    }
+
     //Список пунктов меню
     public function action_menu(){
-        
         //Делаем выборку пунктов меню в массив
         $menu = MFrontConfig::selectMenu();
 
-        //Сортируем массив меню по ключам
-        function array_sort_it($items){
-            $menu_arr = [];
-            foreach ($items as $item){
-                $menu_arr[$item['id']]['id'] = $item['id'];
-                $menu_arr[$item['id']]['parent_id'] = $item['parent_id'];
-                $menu_arr[$item['id']]['title'] = $item['title'];
-                $menu_arr[$item['id']]['ord'] = $item['ord'];
-                $menu_arr[$item['id']]['target'] = $item['target'];
-                $menu_arr[$item['id']]['active'] = $item['active'];
-            }
-            return $menu_arr;
-        }
-
-        //Создаем древовидный массив меню
-        function build_tree($data){
-            $tree = [];
-            foreach($data as $id => &$row){
-                if($row['parent_id'] == '0'){
-                    $tree[$id] = &$row;
-                } else {
-                    $data[$row['parent_id']]['childs'][$id] = &$row;
-                }
-            }
-            return $tree;
-        }
         //вывод результата
-        $menu = array_sort_it($menu);
-        $menu = build_tree($menu);
+        $menu = $this->array_sort_it($menu);
+        $menu = $this->build_tree($menu);
         return $menu;
     }
 
@@ -103,14 +103,8 @@ class CFrontController
 
         //Список пунктов меню
         $smarty->assign('menu',$this->action_menu());
-
         //Активный пункт  меню (для пометки активной страницы)
-        $param = [];
-        $param[] = $this->params[0];
-        if(isset($this->params[1])){
-            $param[] = $this->params[1];
-        }
-        $smarty->assign('menu_active', '/' . implode("/", $param));
+        $smarty->assign('menu_active', $this->getContext()->request()->getResourceUri());
 
         //Системные настройки сайта
         $smarty->assign('site_settings',$this->site_config);

@@ -74,21 +74,19 @@ class CAdminController
     //авторизация 
     function action_auth(){
         $result = MAdminUser::getUserByLogin($this->login);
-        
         if (!empty($result)){
             if(password_verify($this->password, $result['password'])){
                 session_regenerate_id();
                 $_SESSION['auth'] = 'auth';
                 $_SESSION['role'] = $result['role'];
                 $_SESSION['user_id'] =  $result['id'];
-                header("Location: /admin/home");
-                exit();
+            } else {
+                $_SESSION['error'] = 'Неверный логин или пароль';
             }
+        } else {
+            $_SESSION['error'] = 'Неверный логин или пароль'; 
         }
-    
-        $_SESSION['error'] = 'Ошибка авторизации';
-        header("Location: /admin/login");
-        exit();
+        $this->getContext()->redirect($this->getContext()->urlFor('admin_login'));
     }
 
     //выход
@@ -97,8 +95,7 @@ class CAdminController
         unset($_SESSION['auth']);
         unset($_SESSION['role']);
         session_destroy();
-        header("Location: /admin/login");
-        exit();
+        $this->getContext()->redirect($this->getContext()->urlFor('admin_login'));
     }
 
     //Список пунктов меню
@@ -111,14 +108,14 @@ class CAdminController
 
             [ 'group' => 'Страницы',  'icon' => 'fa-file-text-o','role' => 'user',
                 'childs' => [
-                    ['menu_href' => '/admin/pages/index', 'menu_title' => 'Список', 'icon' => 'fa-th-list','role' => 'user'],
+                    ['menu_href' => '/admin/pages', 'menu_title' => 'Список', 'icon' => 'fa-th-list','role' => 'user'],
                     ['menu_href' => '/admin/pages/addpage', 'menu_title' => 'Добавить', 'icon' => 'fa-plus-circle','role' => 'user']
                 ]
             ],
 
             [ 'group' => 'Записи',  'icon' => 'fa-list-alt','role' => 'user',
                 'childs' => [
-                    ['menu_href' => '/admin/category/index', 'menu_title' => 'Список категорий', 'icon' => 'fa-list-ol','role' => 'user'],
+                    ['menu_href' => '/admin/category', 'menu_title' => 'Список категорий', 'icon' => 'fa-list-ol','role' => 'user'],
                     ['menu_href' => '/admin/category/addcategory', 'menu_title' => 'Добавить категорию', 'icon' => 'fa-plus-circle','role' => 'user'],
                     ['menu_href' => '/admin/category/addrecord', 'menu_title' => 'Добавить запись', 'icon' => 'fa-plus-square','role' => 'user']
                 ]
@@ -126,14 +123,14 @@ class CAdminController
 
             [ 'group' => 'Галерея', 'icon' => 'fa-camera-retro','role' => 'user',
                 'childs' => [
-                    ['menu_href' => '/admin/gallerylist/index', 'menu_title' => 'Список разделов', 'icon' => 'fa-th','role' => 'user'],
+                    ['menu_href' => '/admin/gallerylist', 'menu_title' => 'Список разделов', 'icon' => 'fa-th','role' => 'user'],
                     ['menu_href' => '/admin/gallerylist/addgallerylist', 'menu_title' => 'Добавить раздел', 'icon' => 'fa-list-alt','role' => 'user'],
                     ['menu_href' => '/admin/gallerylist/addgallery', 'menu_title' => 'Добавить альбом', 'icon' => 'fa-photo','role' => 'user'],
                     ['menu_href' => '/admin/gallerylist/addvideo', 'menu_title' => 'Добавить видео', 'icon' => 'fa-video-camera','role' => 'user']
                 ]
             ],
 
-            ['menu_href' => '/admin/menu/index', 'menu_title' => 'Меню', 'icon' => 'fa-tasks','role' => 'user'],
+            ['menu_href' => '/admin/menu', 'menu_title' => 'Меню', 'icon' => 'fa-tasks','role' => 'user'],
 
             [ 'group' => 'Настройки', 'icon' => 'fa-gears','role' => 'user',
                 'childs' => [
@@ -195,7 +192,7 @@ class CAdminController
         $smarty->assign('menu',$this->action_menu());
 
         //Активный пункт  меню (для пометки активной страницы)
-        $smarty->assign('menu_active', $_SERVER['REQUEST_URI']);
+        $smarty->assign('menu_active', $this->getContext()->request()->getResourceUri());
 
         //Три последних сообщения
         $smarty->assign('last_messages',$this->lastMessages());
@@ -203,9 +200,6 @@ class CAdminController
         //Роль пользователя и его ID
         $smarty->assign('role',$_SESSION['role']);
         $smarty->assign('user_id',$_SESSION['user_id']);
-
-        //Активный пункт  меню (для пометки активной страницы)
-        $smarty->assign('menu_active', $_SERVER['REQUEST_URI']);
 
         //Системные настройки сайта
         $smarty->assign('site_settings',$this->site_config);
