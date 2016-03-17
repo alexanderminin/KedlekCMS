@@ -47,7 +47,7 @@
 <h2>Установка:</h2>
 <ul>
 <li>Установите пакеты с помощью composer install</li>
-<li>Установите права на запись у папок: '/images', '/lib/cache', '/lib/templates_c/admin', '/lib/templates_c/front'</li>
+<li>Установите права на запись у папок: '/images', '/lib/cache', '/lib/templates_c/admin', '/lib/templates_c/front', 'filemanager/thumbs'</li>
 <li>Переименуйте фаил настроек config_dev.php в config.php</li>
 <li>Отредактируйте файл config.php</li>
 <li>Запустите install.php</li>
