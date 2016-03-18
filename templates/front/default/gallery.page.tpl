@@ -24,7 +24,7 @@
                             <div class="col-lg-3 col-md-4 col-xs-6 thumb" style="padding-top: 15px;">
                                 <div>
                                     <a href="/images/{$item.file}" class="img-thumbnail" data-gallery>
-                                        <img class="img-responsive" src="/images/{$item.thumb}" alt="{$title}">
+                                        <img class="block-fancybox img-responsive" src="/images/{$item.thumb}" alt="{$title}">
                                     </a>
                                 </div>
                             </div>
