@@ -82,11 +82,13 @@ class CAdminController
                 $_SESSION['user_id'] =  $result['id'];
             } else {
                 $_SESSION['error'] = 'Неверный логин или пароль';
+                $this->getContext()->redirect($this->getContext()->urlFor('admin_login'));
             }
         } else {
-            $_SESSION['error'] = 'Неверный логин или пароль'; 
+            $_SESSION['error'] = 'Неверный логин или пароль';
+            $this->getContext()->redirect($this->getContext()->urlFor('admin_login'));
         }
-        $this->getContext()->redirect($this->getContext()->urlFor('admin_login'));
+        $this->getContext()->redirect($this->getContext()->urlFor('admin'));
     }
 
     //выход
